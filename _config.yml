@@ -3,11 +3,12 @@
 # ----------------------- #
 
 url: http://iamblue.github.com
-title: My Octopress Blog
-subtitle: A blogging framework for hackers.
-author: Your Name
+title: IamBlue
+subtitle: Coding is not only a routine but also an art.
+author: Mr.Blue
 simple_search: http://google.com/search
-description:
+logo_url: /images/blue_logo.png
+description: 
 
 # Default date format is "ordinal" (resulting in "July 22nd 2007")
 # You can customize the format as defined in
@@ -19,7 +20,7 @@ date_format: "ordinal"
 subscribe_rss: /atom.xml
 subscribe_email:
 # RSS feeds can list your email address if you like
-email:
+email: tonyone0902@hotmail.com
 
 # ----------------------- #
 #    Jekyll & Plugins     #
@@ -34,7 +35,7 @@ plugins: plugins
 code_dir: downloads/code
 category_dir: blog/categories
 markdown: rdiscount
-pygments: false # default python pygments have been replaced by pygments.rb
+pygments: true # default python pygments have been replaced by pygments.rb
 
 paginate: 10          # Posts per page on the blog index
 pagination_dir: blog  # Directory base for pagination URLs eg. /blog/page/2/
@@ -89,11 +90,21 @@ delicious_user:
 delicious_count: 3
 
 # Disqus Comments
-disqus_short_name:
-disqus_show_comment_count: false
+disqus_short_name: mrblue
+disqus_show_comment_count: true
 
 # Google Analytics
 google_analytics_tracking_id:
 
 # Facebook Like
-facebook_like: false
+facebook_like: true
+
+#facebook link on right table
+facebook_user: 100000209728095
+
+# post category
+front_end: /images/front-end.png
+back_end: /images/back-end.png
+settings: /images/settings.png
+lighting_talk: /images/lighting-talk.png
+

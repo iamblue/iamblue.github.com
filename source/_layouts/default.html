@@ -1,13 +1,475 @@
 {% capture root_url %}{{ site.root | strip_slash }}{% endcapture %}
 {% include head.html %}
-
 <body>
-	<header id="header" class="inner">{% include header.html %}</header>
-	{% unless page.banner == false %}
-		{% include banner.html %}
-	{% endunless %}
-	<div id="content" class="inner">{{ content | expand_urls: root_url }}</div>
+	<div class="wrapper_frame">
+		<!--  overlay area -->
+		<div id="overlay" style="top: -116px; ">
+			<!--BEGIN .entry-content -->
+			<div class="entry-content clearfix">
+				<p>In this site overlay you can include any content you wish, links, images, shortcodes.. in fact, you can pull in the entire contents of one of your pages. Perhaps you will use this to show your visitors something about yourself, perhaps some kind of announcement or maybe you’ll turn it off altogether. Completely up to you.</p>
+			</div>
+			<!--END .entry-content -->
+		</div>
+		<div id="overlay-trigger"><a href="#"></a></div>
+		<!-- END #overlay -->
+		<!--  header area -->
+		<header id="header" class="inner">{% include header.html %}</header>
+		<!--  header area END-->
+		<div class="dot_bar top_dot"></div>
+
+		<!-- index show page area-->
+		<!--<div class="show_main_nav_frame">
+			<div class="show_main_nav">
+				<ul class="main_nav">
+					<li>Blog</li>
+					<li>Album</li>
+					<li>About Me</li>
+				</ul>
+			</div>
+		</div>
+		<div class="social_nav_frame">
+			<div class="social_nav">
+				<a class="social_nav_title">Stay Connected with me</a>
+			</div>
+		</div>-->
+		<div class="show_frame">
+			<div class="include_show_content">
+				<div class="show_main_frame">
+					<img src="/images/logo_large.png" />
+				</div>
+				<div id="show_sb1">
+					<img class="show_sb_1" src="/images/subtitle_1.png"/>
+					<img class="show_sb_2" src="/images/subtitle_2.png"/>
+					<img class="show_sb_3" src="/images/subtitle_3.png"/>
+				</div>
+			</div>
+			<div id="show_logo">
+				<!--<img  src="/images/show.png"/>-->
+				<img class="show_english" src="/images/show/english.png">
+				<img class="show_iphone" src="/images/show/iphone.png">
+				<img class="show_mac" src="/images/show/mac.png">
+				<img class="show_glock_gun" src="/images/show/glock_gun.png">
+				<img class="show_leica" src="/images/show/leica.png">
+				<!--<img class="show_pencil" src="/images/show/pencil.png">
+				<img class="show_number" src="/images/show/number.png">
+				<img class="show_small_package" src="/images/show/small_package.png">
+				<img class="show_yellow_book" src="/images/show/yellow_book.png">
+				<img class="show_watch" src="/images/show/watch.png">-->
+				<!--<img class="show_bullets" src="/images/show/bullets.png">
+				<img class="show_knife" src="/images/show/knife.png">
+				<img class="show_sun_glass" src="/images/show/sun_glass.png">-->
+			</div>
+		</div>	
+		<div class="dot_bar"></div>
+		<!-- index show page area END-->
+		{% unless page.banner == false %}
+			{% include banner.html %}
+		{% endunless %}
+		<div id="content" class="inner_frame">
+			<div class="aside_bar">{% include aside.html %}</div>
+			<div class="inner post_frame">{{ content | expand_urls: root_url }}</div>
+		</div>
+		<a href="#" id="toTop" style="display: inline; "><span id="toTopHover"></span>To Top</a>
+	</div>
 	<footer id="footer" class="inner">{% include footer.html %}</footer>
 	{% include after_footer.html %}
+	<!--  Extended js area	-->
+	<script type="text/javascript" src="/javascripts/easing.js"></script>
+	<script type="text/javascript" src="/javascripts/jquery.ui.totop.js"></script>
+	<script type="text/javascript">
+		$(document).ready(function() {
+			$().UItoTop({ easingType: 'easeOutQuart' });
+			/*-----------------------------------------------------
+						scroll Animation Ui made by Blue
+			------------------------------------------------------*/
+
+			$('.show_main_nav').scrollAnimate({
+				startScroll: 0,
+				endScroll: 180,
+				cssProperty: 'margin-right',
+				before: 0,
+				after: -510
+			}).scrollAnimate({
+				startScroll: 0,
+				endScroll: 180,
+				cssProperty: 'opacity',
+				before: 1,
+				after: 0
+			});
+			$('.social_nav').scrollAnimate({
+				startScroll: 0,
+				endScroll: 180,
+				cssProperty: 'margin-right',
+				before: 0,
+				after: -510
+			}).scrollAnimate({
+				startScroll: 0,
+				endScroll: 180,
+				cssProperty: 'opacity',
+				before: 1,
+				after: 0
+			})
+			$('.show_main_frame').scrollAnimate({
+				startScroll: 100,
+				endScroll: 280,
+				cssProperty: 'top',
+				before: 0,
+				after: -200
+			}).scrollAnimate({
+				startScroll: 100,
+				endScroll: 180,
+				cssProperty: 'opacity',
+				before: 1,
+				after: 0
+			})
+			$('.main_1').scrollAnimate({
+				startScroll: 380,
+				endScroll: 500,
+				cssProperty: 'margin-left',
+				before: -200,
+				after: 0
+			}).scrollAnimate({
+				startScroll: 380,
+				endScroll: 500,
+				cssProperty: 'opacity',
+				before: 0,
+				after: 1
+			});
+			$('.main_2').scrollAnimate({
+				startScroll: 450,
+				endScroll: 570,
+				cssProperty: 'margin-left',
+				before: -200,
+				after: 0
+			}).scrollAnimate({
+				startScroll: 450,
+				endScroll: 570,
+				cssProperty: 'opacity',
+				before: 0,
+				after: 1
+			});
+			$('.main_3').scrollAnimate({
+				startScroll: 520,
+				endScroll: 640,
+				cssProperty: 'margin-left',
+				before: -200,
+				after: 0
+			}).scrollAnimate({
+				startScroll: 520,
+				endScroll: 640,
+				cssProperty: 'opacity',
+				before: 0,
+				after: 1
+			});
+			$('.main_4').scrollAnimate({
+				startScroll: 590,
+				endScroll: 710,
+				cssProperty: 'margin-left',
+				before: -200,
+				after: 0
+			}).scrollAnimate({
+				startScroll: 590,
+				endScroll: 710,
+				cssProperty: 'opacity',
+				before: 0,
+				after: 1
+			})
+
+			/*      show UI      */
+			$('.show_english').scrollAnimate({
+				startScroll: 70,
+				endScroll: 180,
+				cssProperty: 'margin-top',
+				before: 50,
+				after: 0
+			});
+			$('.show_iphone').scrollAnimate({
+				startScroll: 70,
+				endScroll: 180,
+				cssProperty: 'margin-top',
+				before: 50,
+				after: 0
+			});
+			$('.show_mac').scrollAnimate({
+				startScroll: 70,
+				endScroll: 180,
+				cssProperty: 'margin-top',
+				before: 50,
+				after: 0
+			});
+			$('.show_glock_gun').scrollAnimate({
+				startScroll: 170,
+				endScroll: 280,
+				cssProperty: 'margin-top',
+				before: 180,
+				after: 160
+			}).scrollAnimate({
+				startScroll: 170,
+				endScroll: 280,
+				cssProperty: 'margin-left',
+				before: 0,
+				after: 0
+			});
+			$('.show_leica').scrollAnimate({
+				startScroll: 170,
+				endScroll: 320,
+				cssProperty: 'margin-top',
+				before: 600,
+				after: 320
+			}).scrollAnimate({
+				startScroll: 170,
+				endScroll: 320,
+				cssProperty: 'opacity',
+				before: .5,
+				after: 1
+			})
+
+			/*$('.show_pencil').scrollAnimate({
+				startScroll: 330,
+				endScroll: 450,
+				cssProperty: 'margin-top',
+				before: 500,
+				after: 500
+			}).scrollAnimate({
+				startScroll: 330,
+				endScroll: 450,
+				cssProperty: 'margin-left',
+				before: -50,
+				after: 0
+			}).scrollAnimate({
+				startScroll: 330,
+				endScroll: 450,
+				cssProperty: 'opacity',
+				before: 0,
+				after: 1
+			});
+			$('.show_number').scrollAnimate({
+				startScroll: 400,
+				endScroll: 540,
+				cssProperty: 'margin-top',
+				before: 800,
+				after: 500
+			}).scrollAnimate({
+				startScroll: 400,
+				endScroll: 540,
+				cssProperty: 'margin-left',
+				before: 60,
+				after: 60
+			}).scrollAnimate({
+				startScroll: 400,
+				endScroll: 540,
+				cssProperty: 'opacity',
+				before: 0,
+				after: 1
+			});
+			$('.show_small_package').scrollAnimate({
+				startScroll: 460,
+				endScroll: 600,
+				cssProperty: 'margin-top',
+				before: 800,
+				after: 600
+			}).scrollAnimate({
+				startScroll: 460,
+				endScroll: 600,
+				cssProperty: 'margin-left',
+				before: 60,
+				after: 60
+			}).scrollAnimate({
+				startScroll: 460,
+				endScroll: 600,
+				cssProperty: 'opacity',
+				before: 0,
+				after: 1
+			});
+			$('.show_yellow_book').scrollAnimate({
+				startScroll: 590,
+				endScroll: 690,
+				cssProperty: 'margin-top',
+				before: 850,
+				after: 520
+			}).scrollAnimate({
+				startScroll: 590,
+				endScroll: 690,
+				cssProperty: 'margin-left',
+				before: 300,
+				after: 300
+			}).scrollAnimate({
+				startScroll: 590,
+				endScroll: 690,
+				cssProperty: 'opacity',
+				before: 0,
+				after: 1
+			});
+			$('.show_watch').scrollAnimate({
+				startScroll: 670,
+				endScroll: 770,
+				cssProperty: 'margin-top',
+				before: 550,
+				after: 550
+			}).scrollAnimate({
+				startScroll: 670,
+				endScroll: 770,
+				cssProperty: 'margin-left',
+				before: 700,
+				after: 540
+			}).scrollAnimate({
+				startScroll: 670,
+				endScroll: 770,
+				cssProperty: 'opacity',
+				before: 0,
+				after: 1
+			});*/
+			/*$('.show_bullets').scrollAnimate({
+				startScroll: 740,
+				endScroll: 870,
+				cssProperty: 'margin-top',
+				before: 920,
+				after: 920
+			}).scrollAnimate({
+				startScroll: 740,
+				endScroll: 870,
+				cssProperty: 'margin-left',
+				before: -50,
+				after: 30
+			}).scrollAnimate({
+				startScroll: 740,
+				endScroll: 870,
+				cssProperty: 'opacity',
+				before: 0,
+				after: 1
+			});
+			$('.show_knife').scrollAnimate({
+				startScroll: 820,
+				endScroll: 960,
+				cssProperty: 'margin-top',
+				before: 1050,
+				after: 880
+			}).scrollAnimate({
+				startScroll: 820,
+				endScroll: 960,
+				cssProperty: 'margin-left',
+				before: 230,
+				after: 230
+			}).scrollAnimate({
+				startScroll: 820,
+				endScroll: 960,
+				cssProperty: 'opacity',
+				before: 0,
+				after: 1
+			});
+			$('.show_sun_glass').scrollAnimate({
+				startScroll: 900,
+				endScroll: 1020,
+				cssProperty: 'margin-top',
+				before: 880,
+				after: 880
+			}).scrollAnimate({
+				startScroll: 900,
+				endScroll: 1020,
+				cssProperty: 'margin-left',
+				before: 700,
+				after: 440
+			}).scrollAnimate({
+				startScroll: 900,
+				endScroll: 1020,
+				cssProperty: 'opacity',
+				before: 0,
+				after: 1
+			});*/
+			/*$('#header h1').scrollAnimate({
+				startScroll: 0,
+				endScroll: 250,
+				cssProperty: 'transform',
+				before: 'rotate(0deg)',
+				after: 'rotate(-40deg)'
+			}).scrollAnimate({
+				startScroll: 0,
+				endScroll: 150,
+				cssProperty: 'margin-top',
+				before: 120,
+				after: -100
+			});
+
+			$('#header h2').scrollAnimate({
+				startScroll: 0,
+				endScroll: 250,
+				cssProperty: 'transform',
+				before: 'rotate(0deg)',
+				after: 'rotate(40deg)'
+			});
+
+			$('.backtotop').scrollAnimate({
+				startScroll: 200,
+				endScroll: 300,
+				cssProperty: 'right',
+				before: -150,
+				after: 50
+			}).scrollAnimate({
+				startScroll: 200,
+				endScroll: 300,
+				cssProperty: 'opacity',
+				before: 0,
+				after: 1
+			});
+
+			$('#nav').scrollAnimate({
+				startScroll: 200,
+				endScroll: 300,
+				cssProperty: 'left',
+				before: -150,
+				after: 40
+			});
+
+			$('.content').scrollAnimate({
+				startScroll: 200,
+				endScroll: 450,
+				cssProperty: 'opacity',
+				before: 0,
+				after: 1
+			});*/
+			/*-----------------------------------------------------
+						Overlay UI made by blue
+			------------------------------------------------------*/
+			var overlayTrigger = jQuery('#overlay-trigger a');
+			var overlayState = 'close';
+			overlayTrigger.toggle( function() {
+				overlayState = 'open';
+				jQuery('#overlay').css({
+					top: -jQuery('#overlay').outerHeight()
+				});
+				overlayTrigger.addClass('active');
+				jQuery('#overlay').animate({
+					top: 0
+				}, 700, 'easeInOutQuart');
+				jQuery('#overlay-trigger').animate({
+					top: jQuery('#overlay').outerHeight() + 10
+				}, 700, 'easeInOutQuart');
+				
+			}, function () {
+				overlayState = 'close';
+				overlayTrigger.removeClass('active');
+				jQuery('#overlay').animate({
+					top: -jQuery('#overlay').outerHeight()
+				}, 700, 'easeInOutQuart');
+				jQuery('#overlay-trigger').animate({
+					top: 10
+				}, 700, 'easeInOutQuart');
+			});
+			});
+
+
+
+
+
+
+
+$(document).ready(function() {
+
+
+});
+
+
+	</script>
+	<!-- Extended js area End  -->
 </body>
 </html>
