@@ -8,7 +8,7 @@ categories:
 
 About count format.
 
-In America, most of people are used to using "1,000.00" format.However,this format is not write in database directly.In today's common MVC framework,they have some similar attempts to prevent this format write in database.But this attempts often build in back-end.Standing on user's view,if you type this format and sent this page,you will see a error page after few second and you will type it againt....The phenomenon is not a good UI.So, I suggest we should do valitation on front-end and solve this problem.
+In America, most of people are used to using “1,000.00” format.However,this format is not written in the database directly.In today’s common MVC framework. They have some similar attempts to prevent this format write in the database.But these attempts often build in back-end.Standing on the user’s view,if you type this format and sent this page. You will see an error page after few second and you will type it again…The phenomenon is not a good UI.So, I suggest we should do validation on the front-end and solve this problem.
 
 View
 
