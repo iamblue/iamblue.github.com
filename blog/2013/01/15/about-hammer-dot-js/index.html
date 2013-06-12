@@ -7,9 +7,9 @@
 	<meta name="author" content="Mr.Blue">
 
 	
-	<meta name="description" content="淺談Hammer.js 首先，先提一下為何用Hammer.js的原因： 1.他把在Html5裡的gesture和touch事件與原來傳統mouse事件做結合
+	<meta name="description" content="About Hammer.js 淺談Hammer.js 首先，先提一下為何用Hammer.js的原因： 1.他把在Html5裡的gesture和touch事件與原來傳統mouse事件做結合
 2.有針對各手指去做追蹤
-3.多功能的event事件 最後，結合以上&hellip;.只需要2KB，實在沒有不用它的道理! 關於第一點， &hellip;">
+3.多功能的event事件 最後，結合以上&hellip;.只需要2KB， &hellip;">
 	
 
   <!-- http://t.co/dKP3o1e -->
@@ -19,30 +19,35 @@
 
 	<link href="/atom.xml" rel="alternate" title="IamBlue" type="application/atom+xml">
 	
-	<link rel="canonical" href="http://iamblue.github.com/blog/2013/01/15/about-hammer-dot-js/">
+	<link rel="canonical" href="http://iamblue.github.io/blog/2013/01/15/about-hammer-dot-js/">
 	<link href="/favicon.png" rel="shortcut icon">
 	<link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
 	<!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
 	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
 	<link href='http://fonts.googleapis.com/css?family=Open+Sans:400italic,400,700' rel='stylesheet' type='text/css'>
 	
-	
-
 </head>
+
 
 <body>
 	<div class="container">
 		<div class="left-col">
 			<div class="intrude-less">
 			<header id="header" class="inner"><div class="profilepic">	
-	<img src="/images/dp.jpg" alt="Profile Picture" style="width: 160px;">
+	<script src="/javascripts/md5.js"></script>
+	<script type="text/javascript">
+		$(function(){
+			$('.profilepic').append("<img src='http://www.gravatar.com/avatar/" + MD5("tonyone0902@hotmail.com") + "?s=160' alt='Profile Picture' style='width: 160px;' />");
+		});
+	</script>
 </div>
-<h1><a href="/">IamBlue</a></h1>
+
 <p class="subtitle">Coding is not only a routine but also an art.</p>
 <nav id="main-nav"><ul class="main">
 	<li><a href="/">Blog</a></li>
 	<li><a href="/blog/archives">Archives</a></li>
 </ul>
+
 </nav>
 <nav id="sub-nav">
 	<div class="social">
@@ -57,11 +62,11 @@
 		
 		
 		
+		
 		<a class="rss" href="/atom.xml" title="RSS">RSS</a>
 		
 	</div>
 </nav>
-
 </header>				
 			</div>
 		</div>	
@@ -70,9 +75,9 @@
 				
 			
 			<div class="mid-col-container">
-				<div id="content" class="inner"><article class="post">
-	<h1 class="title">About Hammer.js</h1>
-	<div class="entry-content"><p>淺談Hammer.js</p>
+				<div id="content" class="inner"><article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+	<h1 class="title" itemprop="name">About Hammer.js</h1>
+	<div class="entry-content" itemprop="articleBody"><p>淺談Hammer.js</p>
 
 <p>首先，先提一下為何用Hammer.js的原因：</p>
 
@@ -237,8 +242,8 @@ Design credit: <a href="http://shashankmehta.in/archive/2012/greyshade.html">Sha
       
         
         // var disqus_developer = 1;
-        var disqus_identifier = 'http://iamblue.github.com/blog/2013/01/15/about-hammer-dot-js/';
-        var disqus_url = 'http://iamblue.github.com/blog/2013/01/15/about-hammer-dot-js/';
+        var disqus_identifier = 'http://iamblue.github.io/blog/2013/01/15/about-hammer-dot-js/';
+        var disqus_url = 'http://iamblue.github.io/blog/2013/01/15/about-hammer-dot-js/';
         var disqus_script = 'embed.js';
       
     (function () {

@@ -2,10 +2,10 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 
   <title><![CDATA[IamBlue]]></title>
-  <link href="http://iamblue.github.com/atom.xml" rel="self"/>
-  <link href="http://iamblue.github.com/"/>
-  <updated>2013-06-12T11:42:53+08:00</updated>
-  <id>http://iamblue.github.com/</id>
+  <link href="http://iamblue.github.io/atom.xml" rel="self"/>
+  <link href="http://iamblue.github.io/"/>
+  <updated>2013-06-12T11:58:18+08:00</updated>
+  <id>http://iamblue.github.io/</id>
   <author>
     <name><![CDATA[Mr.Blue]]></name>
     <email><![CDATA[tonyone0902@hotmail.com]]></email>
@@ -15,9 +15,9 @@
   
   <entry>
     <title type="html"><![CDATA[Install Zsh to decorate your command line]]></title>
-    <link href="http://iamblue.github.com/blog/2013/06/11/install-zsh-to-decorate-your-command-line/"/>
+    <link href="http://iamblue.github.io/blog/2013/06/11/install-zsh-to-decorate-your-command-line/"/>
     <updated>2013-06-11T18:16:00+08:00</updated>
-    <id>http://iamblue.github.com/blog/2013/06/11/install-zsh-to-decorate-your-command-line</id>
+    <id>http://iamblue.github.io/blog/2013/06/11/install-zsh-to-decorate-your-command-line</id>
     <content type="html"><![CDATA[<p>zsh feature:(oh my zsh &mdash;> agnoster themeplate)</p>
 
 <ol>
@@ -58,9 +58,9 @@
   
   <entry>
     <title type="html"><![CDATA[About Hammer.js]]></title>
-    <link href="http://iamblue.github.com/blog/2013/01/15/about-hammer-dot-js/"/>
+    <link href="http://iamblue.github.io/blog/2013/01/15/about-hammer-dot-js/"/>
     <updated>2013-01-15T10:27:00+08:00</updated>
-    <id>http://iamblue.github.com/blog/2013/01/15/about-hammer-dot-js</id>
+    <id>http://iamblue.github.io/blog/2013/01/15/about-hammer-dot-js</id>
     <content type="html"><![CDATA[<p>淺談Hammer.js</p>
 
 <p>首先，先提一下為何用Hammer.js的原因：</p>
@@ -184,9 +184,9 @@ triggerEvent("dragend", {
   
   <entry>
     <title type="html"><![CDATA[一些關於javascript OO (Object Oriented) issue]]></title>
-    <link href="http://iamblue.github.com/blog/2013/01/09/%5B%3F%5D-xie-guan-yu-newde-zheng-yi/"/>
+    <link href="http://iamblue.github.io/blog/2013/01/09/%5B%3F%5D-xie-guan-yu-newde-zheng-yi/"/>
     <updated>2013-01-09T13:54:00+08:00</updated>
-    <id>http://iamblue.github.com/blog/2013/01/09/[?]-xie-guan-yu-newde-zheng-yi</id>
+    <id>http://iamblue.github.io/blog/2013/01/09/[?]-xie-guan-yu-newde-zheng-yi</id>
     <content type="html"><![CDATA[<p>不用this (oo)的寫法：</p>
 
 <pre><code>var yoyo ={
@@ -291,9 +291,9 @@ C: 一般的prototype寫法
   
   <entry>
     <title type="html"><![CDATA[Array and Object]]></title>
-    <link href="http://iamblue.github.com/blog/2013/01/09/array-and-object/"/>
+    <link href="http://iamblue.github.io/blog/2013/01/09/array-and-object/"/>
     <updated>2013-01-09T10:49:00+08:00</updated>
-    <id>http://iamblue.github.com/blog/2013/01/09/array-and-object</id>
+    <id>http://iamblue.github.io/blog/2013/01/09/array-and-object</id>
     <content type="html"><![CDATA[<p>Let&rsquo;s talk about Array and Object on data access application (by javascript).</p>
 
 <p>&mdash;&mdash;Array</p>
@@ -361,9 +361,9 @@ console.log(alldata[0].user) // 'blue'
   
   <entry>
     <title type="html"><![CDATA[RequireJS]]></title>
-    <link href="http://iamblue.github.com/blog/2013/01/03/requirejs/"/>
+    <link href="http://iamblue.github.io/blog/2013/01/03/requirejs/"/>
     <updated>2013-01-03T00:14:00+08:00</updated>
-    <id>http://iamblue.github.com/blog/2013/01/03/requirejs</id>
+    <id>http://iamblue.github.io/blog/2013/01/03/requirejs</id>
     <content type="html"><![CDATA[<p>RequireJS</p>
 
 <p>在進入RequireJS之前，我想先帶各位了解requireJS的優點，以及為何我們要用requireJS?</p>
@@ -476,9 +476,9 @@ require(["jquery.alpha","jquery.beta"], function(a,b) {
   
   <entry>
     <title type="html"><![CDATA[onclick and addEventListner]]></title>
-    <link href="http://iamblue.github.com/blog/2012/12/06/onclick_addeventlistner/"/>
+    <link href="http://iamblue.github.io/blog/2012/12/06/onclick_addeventlistner/"/>
     <updated>2012-12-06T23:18:00+08:00</updated>
-    <id>http://iamblue.github.com/blog/2012/12/06/onclick_addeventlistner</id>
+    <id>http://iamblue.github.io/blog/2012/12/06/onclick_addeventlistner</id>
     <content type="html"><![CDATA[<p>onclick event and addEventListner(&ldquo;click&rdquo;,fuc(),boolin)
 The major difference of them is their DOM type.&ldquo;Onclick event&rdquo; is DOM 0,and addEventListner(&ldquo;click&rdquo;,fuc(),boolin) is DOM 2.</p>
 
@@ -542,16 +542,16 @@ The major difference of them is their DOM type.&ldquo;Onclick event&rdquo; is DO
   
   <entry>
     <title type="html"><![CDATA[validate on different format count]]></title>
-    <link href="http://iamblue.github.com/blog/2012/12/06/validation-on-count/"/>
+    <link href="http://iamblue.github.io/blog/2012/12/06/validation-on-count/"/>
     <updated>2012-12-06T08:32:00+08:00</updated>
-    <id>http://iamblue.github.com/blog/2012/12/06/validation-on-count</id>
+    <id>http://iamblue.github.io/blog/2012/12/06/validation-on-count</id>
     <content type="html"><![CDATA[<p>About count format.</p>
 
 <p>In America, most of people are used to using “1,000.00” format.However,this format is not written in the database directly.In today’s common MVC framework. They have some similar attempts to prevent this format write in the database.But these attempts often build in back-end.Standing on the user’s view,if you type this format and sent this page. You will see an error page after few second and you will type it again…The phenomenon is not a good UI.So, I suggest we should do validation on the front-end and solve this problem.</p>
 
 <p>View</p>
 
-<p><img src="http://iamblue.github.com/images/post_img/validate_on_count/product_info_1.png"/></p>
+<p><img src="http://iamblue.github.io/images/post_img/validate_on_count/product_info_1.png"/></p>
 
 <p>We have four form to type in.First form is Estimated Price. Second form is Estimated shipping.Third form is Estimated Tax.Fourth form is Total cost which is combine above (three) form&#8217; value.When we type one of three forms ,the &ldquo;Total cost&rdquo; form will replace its value.</p>
 
@@ -633,9 +633,9 @@ else{
   
   <entry>
     <title type="html"><![CDATA[[project] 進度追蹤]]></title>
-    <link href="http://iamblue.github.com/blog/2012/12/01/project/"/>
+    <link href="http://iamblue.github.io/blog/2012/12/01/project/"/>
     <updated>2012-12-01T00:19:00+08:00</updated>
-    <id>http://iamblue.github.com/blog/2012/12/01/project</id>
+    <id>http://iamblue.github.io/blog/2012/12/01/project</id>
     <content type="html"><![CDATA[<br/>
 
 
@@ -663,9 +663,9 @@ else{
   
   <entry>
     <title type="html"><![CDATA[BACKBONE.JS]]></title>
-    <link href="http://iamblue.github.com/blog/2012/11/26/backbone-dot-js/"/>
+    <link href="http://iamblue.github.io/blog/2012/11/26/backbone-dot-js/"/>
     <updated>2012-11-26T10:22:00+08:00</updated>
-    <id>http://iamblue.github.com/blog/2012/11/26/backbone-dot-js</id>
+    <id>http://iamblue.github.io/blog/2012/11/26/backbone-dot-js</id>
     <content type="html"><![CDATA[<p>BACKBONE.js</p>
 
 <p>Before learning BACKBONE.js, we should know what extended javascript lib will be included in BACKBONE.js project.</p>
@@ -790,7 +790,7 @@ In the demo,its view divid into two parts.</p>
 
 <p>This view acting on every todo item</p>
 
-<p><img src='http://iamblue.github.com/images/post_img/BACKBONE_JS/backbone_demo_view1.png'></p>
+<p><img src='http://iamblue.github.io/images/post_img/BACKBONE_JS/backbone_demo_view1.png'></p>
 
 <pre><code>var TodoView = Backbone.View.extend({
 
@@ -880,7 +880,7 @@ In the demo,its view divid into two parts.</p>
 
 <p>part2.</p>
 
-<p><img src='http://iamblue.github.com/images/post_img/BACKBONE_JS/backbone_demo_view2.png'></p>
+<p><img src='http://iamblue.github.io/images/post_img/BACKBONE_JS/backbone_demo_view2.png'></p>
 
 <pre><code>var AppView = Backbone.View.extend({
 
@@ -1000,9 +1000,9 @@ var App = new AppView;
   
   <entry>
     <title type="html"><![CDATA[Javascript Patterns]]></title>
-    <link href="http://iamblue.github.com/blog/2012/11/12/javascript-patterns/"/>
+    <link href="http://iamblue.github.io/blog/2012/11/12/javascript-patterns/"/>
     <updated>2012-11-12T21:01:00+08:00</updated>
-    <id>http://iamblue.github.com/blog/2012/11/12/javascript-patterns</id>
+    <id>http://iamblue.github.io/blog/2012/11/12/javascript-patterns</id>
     <content type="html"><![CDATA[<p>About Javascript Patterns , you can see this github:</p>
 
 <blockquote><p><a href="http://shichuan.github.com/javascript-patterns/">http://shichuan.github.com/javascript-patterns/</a></p></blockquote>
@@ -1487,9 +1487,9 @@ console.log(result);
   
   <entry>
     <title type="html"><![CDATA[Nodejs-socket.io]]></title>
-    <link href="http://iamblue.github.com/blog/2012/11/10/nodejs-socket-dot-io/"/>
+    <link href="http://iamblue.github.io/blog/2012/11/10/nodejs-socket-dot-io/"/>
     <updated>2012-11-10T21:17:00+08:00</updated>
-    <id>http://iamblue.github.com/blog/2012/11/10/nodejs-socket-dot-io</id>
+    <id>http://iamblue.github.io/blog/2012/11/10/nodejs-socket-dot-io</id>
     <content type="html"><![CDATA[<p>(待寫完)</p>
 
 <p>&lsquo;Real Time&rsquo;, this conception is widely used on the web.If it combine with Nodejs, they will load more users and get higher performance.</p>
@@ -1556,9 +1556,9 @@ socket.js</p>
   
   <entry>
     <title type="html"><![CDATA[[Project]About issue workflow]]></title>
-    <link href="http://iamblue.github.com/blog/2012/11/02/about-issue-workflow/"/>
+    <link href="http://iamblue.github.io/blog/2012/11/02/about-issue-workflow/"/>
     <updated>2012-11-02T10:16:00+08:00</updated>
-    <id>http://iamblue.github.com/blog/2012/11/02/about-issue-workflow</id>
+    <id>http://iamblue.github.io/blog/2012/11/02/about-issue-workflow</id>
     <content type="html"><![CDATA[<p>本篇想來探討關於issue的workflow，記錄解決issue的流程必須非常清楚，這有許多好處：</p>
 
 <pre><code>1.方便後人閱讀,維護
@@ -1626,9 +1626,9 @@ According to web architecture,css and html will be read before javascript,we can
   
   <entry>
     <title type="html"><![CDATA[Browser Compatibility on Html5]]></title>
-    <link href="http://iamblue.github.com/blog/2012/11/01/browser-compatibility/"/>
+    <link href="http://iamblue.github.io/blog/2012/11/01/browser-compatibility/"/>
     <updated>2012-11-01T20:55:00+08:00</updated>
-    <id>http://iamblue.github.com/blog/2012/11/01/browser-compatibility</id>
+    <id>http://iamblue.github.io/blog/2012/11/01/browser-compatibility</id>
     <content type="html"><![CDATA[<p>The major difference between Html5 and xHTML is Html5 add more tag element,such as  &lsquo;&lt;header&gt;&rsquo; , &lsquo;&lt;nav&gt;&rsquo;&hellip;.and so on.</p>
 
 <p>We use these tag elements ,we also notice these tag element whether use in old browser at the same time.
@@ -1665,20 +1665,20 @@ display:block
   
   <entry>
     <title type="html"><![CDATA[about AJAX]]></title>
-    <link href="http://iamblue.github.com/blog/2012/10/26/about-ajax/"/>
+    <link href="http://iamblue.github.io/blog/2012/10/26/about-ajax/"/>
     <updated>2012-10-26T21:19:00+08:00</updated>
-    <id>http://iamblue.github.com/blog/2012/10/26/about-ajax</id>
+    <id>http://iamblue.github.io/blog/2012/10/26/about-ajax</id>
     <content type="html"><![CDATA[<p>For javascript language ,anything must become JSON from Object!We can see following code:</p>
 
 <p>Demo:</p>
 
 <p>Before select one friend:</p>
 
-<p><img src="http://iamblue.github.com/images/post_img/about_AJAX/1.png" /></p>
+<p><img src="http://iamblue.github.io/images/post_img/about_AJAX/1.png" /></p>
 
 <p>After select one friend,and &hellip;AJAX ! (catch his occasions)</p>
 
-<p><img src="http://iamblue.github.com/images/post_img/about_AJAX/2.png" /></p>
+<p><img src="http://iamblue.github.io/images/post_img/about_AJAX/2.png" /></p>
 
 <p>Before show my code , I assume some variable.</p>
 
@@ -1803,9 +1803,9 @@ $this-&gt;layout = 'ajax';
   
   <entry>
     <title type="html"><![CDATA[About media query on CSS]]></title>
-    <link href="http://iamblue.github.com/blog/2012/10/08/about-media-query-on-css/"/>
+    <link href="http://iamblue.github.io/blog/2012/10/08/about-media-query-on-css/"/>
     <updated>2012-10-08T23:25:00+08:00</updated>
-    <id>http://iamblue.github.com/blog/2012/10/08/about-media-query-on-css</id>
+    <id>http://iamblue.github.io/blog/2012/10/08/about-media-query-on-css</id>
     <content type="html"><![CDATA[<p>現今mobile系統越來越多，web應用在mobile系統上的技術也越來越多元，因此寫下此篇來專心探討這部份</p>
 
 <p>首先，想必各位都會有個問題，如果是用web寫程式，那麼手機瀏覽器要如何去感應手機方向呢?</p>
@@ -1941,9 +1941,9 @@ only screen and (min-device-pixel-ratio: 1.5)
   
   <entry>
     <title type="html"><![CDATA[github on Mac]]></title>
-    <link href="http://iamblue.github.com/blog/2012/08/16/github-on-mac/"/>
+    <link href="http://iamblue.github.io/blog/2012/08/16/github-on-mac/"/>
     <updated>2012-08-16T19:43:00+08:00</updated>
-    <id>http://iamblue.github.com/blog/2012/08/16/github-on-mac</id>
+    <id>http://iamblue.github.io/blog/2012/08/16/github-on-mac</id>
     <content type="html"><![CDATA[<p>when we are coworking on github,there maybe have some conflict problems between partner occasionally.</p>
 
 <p>I assume some reason previously, and find some solutions.</p>

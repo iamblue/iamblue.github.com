@@ -7,7 +7,7 @@
 	<meta name="author" content="Mr.Blue">
 
 	
-	<meta name="description" content="The major difference between Html5 and xHTML is Html5 add more tag element,such as &lsquo;&lt;header&gt;&rsquo; , &lsquo;&lt;nav&gt;&rsquo;&hellip;. &hellip;">
+	<meta name="description" content="Browser Compatibility on Html5 The major difference between Html5 and xHTML is Html5 add more tag element,such as &lsquo;&lt;header&gt;&rsquo; , & &hellip;">
 	
 
   <!-- http://t.co/dKP3o1e -->
@@ -17,30 +17,35 @@
 
 	<link href="/atom.xml" rel="alternate" title="IamBlue" type="application/atom+xml">
 	
-	<link rel="canonical" href="http://iamblue.github.com/blog/2012/11/01/browser-compatibility/">
+	<link rel="canonical" href="http://iamblue.github.io/blog/2012/11/01/browser-compatibility/">
 	<link href="/favicon.png" rel="shortcut icon">
 	<link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
 	<!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
 	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
 	<link href='http://fonts.googleapis.com/css?family=Open+Sans:400italic,400,700' rel='stylesheet' type='text/css'>
 	
-	
-
 </head>
+
 
 <body>
 	<div class="container">
 		<div class="left-col">
 			<div class="intrude-less">
 			<header id="header" class="inner"><div class="profilepic">	
-	<img src="/images/dp.jpg" alt="Profile Picture" style="width: 160px;">
+	<script src="/javascripts/md5.js"></script>
+	<script type="text/javascript">
+		$(function(){
+			$('.profilepic').append("<img src='http://www.gravatar.com/avatar/" + MD5("tonyone0902@hotmail.com") + "?s=160' alt='Profile Picture' style='width: 160px;' />");
+		});
+	</script>
 </div>
-<h1><a href="/">IamBlue</a></h1>
+
 <p class="subtitle">Coding is not only a routine but also an art.</p>
 <nav id="main-nav"><ul class="main">
 	<li><a href="/">Blog</a></li>
 	<li><a href="/blog/archives">Archives</a></li>
 </ul>
+
 </nav>
 <nav id="sub-nav">
 	<div class="social">
@@ -55,11 +60,11 @@
 		
 		
 		
+		
 		<a class="rss" href="/atom.xml" title="RSS">RSS</a>
 		
 	</div>
 </nav>
-
 </header>				
 			</div>
 		</div>	
@@ -68,9 +73,9 @@
 				
 			
 			<div class="mid-col-container">
-				<div id="content" class="inner"><article class="post">
-	<h1 class="title">Browser Compatibility on Html5</h1>
-	<div class="entry-content"><p>The major difference between Html5 and xHTML is Html5 add more tag element,such as  &lsquo;&lt;header&gt;&rsquo; , &lsquo;&lt;nav&gt;&rsquo;&hellip;.and so on.</p>
+				<div id="content" class="inner"><article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+	<h1 class="title" itemprop="name">Browser Compatibility on Html5</h1>
+	<div class="entry-content" itemprop="articleBody"><p>The major difference between Html5 and xHTML is Html5 add more tag element,such as  &lsquo;&lt;header&gt;&rsquo; , &lsquo;&lt;nav&gt;&rsquo;&hellip;.and so on.</p>
 
 <p>We use these tag elements ,we also notice these tag element whether use in old browser at the same time.
 There I have one way to solve this problem.</p>
@@ -148,8 +153,8 @@ Design credit: <a href="http://shashankmehta.in/archive/2012/greyshade.html">Sha
       
         
         // var disqus_developer = 1;
-        var disqus_identifier = 'http://iamblue.github.com/blog/2012/11/01/browser-compatibility/';
-        var disqus_url = 'http://iamblue.github.com/blog/2012/11/01/browser-compatibility/';
+        var disqus_identifier = 'http://iamblue.github.io/blog/2012/11/01/browser-compatibility/';
+        var disqus_url = 'http://iamblue.github.io/blog/2012/11/01/browser-compatibility/';
         var disqus_script = 'embed.js';
       
     (function () {
