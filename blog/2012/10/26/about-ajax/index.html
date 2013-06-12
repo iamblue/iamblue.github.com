@@ -1,0 +1,268 @@
+
+<!DOCTYPE HTML>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>about AJAX - IamBlue</title>
+	<meta name="author" content="Mr.Blue">
+
+	
+	<meta name="description" content="For javascript language ,anything must become JSON from Object!We can see following code: Demo: Before select one friend: After select one friend,and &hellip;">
+	
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+	<link href="/atom.xml" rel="alternate" title="IamBlue" type="application/atom+xml">
+	
+	<link rel="canonical" href="http://iamblue.github.com/blog/2012/10/26/about-ajax/">
+	<link href="/favicon.png" rel="shortcut icon">
+	<link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+	<!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+	<link href='http://fonts.googleapis.com/css?family=Open+Sans:400italic,400,700' rel='stylesheet' type='text/css'>
+	
+	
+
+</head>
+
+<body>
+	<div class="container">
+		<div class="left-col">
+			<div class="intrude-less">
+			<header id="header" class="inner"><div class="profilepic">	
+	<img src="/images/dp.jpg" alt="Profile Picture" style="width: 160px;">
+</div>
+<h1><a href="/">IamBlue</a></h1>
+<p class="subtitle">Coding is not only a routine but also an art.</p>
+<nav id="main-nav"><ul class="main">
+	<li><a href="/">Blog</a></li>
+	<li><a href="/blog/archives">Archives</a></li>
+</ul>
+</nav>
+<nav id="sub-nav">
+	<div class="social">
+		
+		<a class="facebook" href="http://www.facebook.com/100000209728095" title="Facebook">Facebook</a>
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		<a class="rss" href="/atom.xml" title="RSS">RSS</a>
+		
+	</div>
+</nav>
+
+</header>				
+			</div>
+		</div>	
+		<div class="mid-col">
+			
+				
+			
+			<div class="mid-col-container">
+				<div id="content" class="inner"><article class="post">
+	<h1 class="title">About AJAX</h1>
+	<div class="entry-content"><p>For javascript language ,anything must become JSON from Object!We can see following code:</p>
+
+<p>Demo:</p>
+
+<p>Before select one friend:</p>
+
+<p><img src="/images/post_img/about_AJAX/1.png" /></p>
+
+<p>After select one friend,and &hellip;AJAX ! (catch his occasions)</p>
+
+<p><img src="/images/post_img/about_AJAX/2.png" /></p>
+
+<p>Before show my code , I assume some variable.</p>
+
+<pre><code>1.SITE_URL: is our website's URL
+</code></pre>
+
+<br/>
+
+
+<p>[Html]:</p>
+
+<pre><code>&lt;select class="select_fr_box" tabindex="1" onchange="getOccasion(this,'100000882157254,100002707491356&amp;','GroupGiftProjectFacebookFriends');" id="GroupGiftProjectFacebookFriends"&gt;
+    &lt;option value=""&gt;Select friends&lt;/option&gt;
+    &lt;option value=""&gt;blabla...&lt;/option&gt;
+&lt;/select&gt;
+</code></pre>
+
+<p>[Javascript &amp; jQuery]:</p>
+
+<pre><code>function getOccasion(ctrl,fb_user_friends,id){
+    $.ajax({
+        type: 'POST'
+        ,url: SITE_URL+'/groupgiftprojects/getOccasion'
+        ,data: {fb_id:ctrl.value}
+        ,success:
+            function(data) {
+                var myObject = eval('(' + data + ')');
+                console.log(myObject);
+                var string ='&lt;option value=""&gt;Select One&lt;/option&gt;';
+
+                (jQuery).each(myObject, function(i,value){
+                    string+="&lt;option value='"+(value.id).toString()+"'&gt;"+(value.name).toString()+"&lt;/option&gt;";
+                });
+                string+='&lt;option value="Other"&gt;Other&lt;/option&gt;';
+                $('#GroupGiftProjectOccasionId').html(string);
+                document.getElementById('id_other_text').style.display = 'none';
+                document.getElementById('app_user').style.display = 'block';
+                }
+            })
+}   
+</code></pre>
+
+<p>值得注意的一點，關於line5 的data部分是要輸入和種格式？為此我去查找jQuery Lib，這是輸入JSON格式.
+講到JSON其實有很多可以去討論的，先來講幾個基本的東西</p>
+
+<p>首先，在javscript中轉變成JSON之前，他必須是個物件</p>
+
+<pre><code>var a ={};
+a.username="blue";
+console.log(a.username) //blue
+JSON.stringify(a);// 這時候就是個JSON格式'{"username":"blue"}'
+</code></pre>
+
+<p>但要怎麼從JSON轉回javscript可用的物件呢？</p>
+
+<pre><code>var a ='{"username":"blue"}';// 假設有個JSON
+var b = JSON.parse(a); //把JSON轉成物件
+這時候就可以像obj一樣導用JSON的函式
+console.log(b.username); //"blue"
+</code></pre>
+
+<p>繼續[javascript部分]：line6的success函式function(data)，這時候的data指的是回傳的JSON(從controller回傳的）再用你喜歡的方法去抓想要的JSON內部值.</p>
+
+<p>此外，補充一些在用facebook api的JSON心得，關於facebook graph的GET與POST中,jQuery 的AJAX只可有POST and GET,那麼DELETE要如何去傳送呢？
+其實不只有jQuery的AJAX無法直接傳送，連browser也需最近幾年的才有DELETE協定，不過這部份不列入我目前想探討的部份，用jQuery AJAX傳送DELETE可以先透過POST外加method方法，如下：
+（比方說做個&#8221;取消likes&#8221;的功能）</p>
+
+<pre><code>$.ajax({
+    type: 'POST',
+    url: 'https://graph.facebook.com/' + post_id + '/likes?method=delete',
+    data: {
+        "access_token": access_token,
+        "_method": "delete"
+    }
+});
+</code></pre>
+
+<p>[php]（controller)：</p>
+
+<pre><code>public function getOccasion(){
+    $fb_id =$_POST['fb_id'];
+    $today_date = gmdate('Y-m-d',mktime(gmdate("H")+$this-&gt;me['timezone']));
+    $occasion_list = $this-&gt;Occasion-&gt;query("SELECT  * FROM occasions as Occasion WHERE (Occasion.fb_id=".$fb_id." AND Occasion.recurs_annually =1) OR (Occasion.fb_id=".$fb_id." AND Occasion.recurs_annually=0 AND Occasion.starting_date &gt;='".$today_date."' )");
+    $occasion_arr =array();
+    foreach( $occasion_list as $list){
+        $temp =array();
+        $occasion_name = $list['Occasion']['name'];
+        $occasion_date = $list['Occasion']['starting_date'];
+        $temp['fb_id']=$list['Occasion']['fb_id'];
+        $temp['id']=$list['Occasion']['id'];
+        $temp['name']=$occasion_name." - ".gmdate('F d, Y',strtotime($occasion_date));
+        $occasion_arr[]=$temp;
+    }
+    echo json_encode($occasion_arr);
+    exit;
+} 
+</code></pre>
+
+<p>這段php，對於AJAX來說，最重要的是line2部分:$_POST[&lsquo;&rsquo;]</p>
+
+<p>這是負責抓取JSON給controller端的php函式，而最後第二行是從php轉成JSON代碼傳回給前端.</p>
+
+<p>最後，來談談關於嚴謹的程式架構，我記得之前在研討會上，就有如此的疑問：</p>
+
+<p>AJAX在controller端直接讀取json這個行為，究竟有沒有違反MVC架構?
+我找了許多資料，嚴格的MVC架構中的C唯一的出口就是view，而這個行為就是只有從Controller順向過去View端（在呈現data時的流程）這是不可逆的，，因此證明這個答案是違反的！</p>
+
+<p>但是這部份因為一樣都可以跑出結果，因此沒有受到廣泛注意，也有一些人都把此行為定義可彈性化的MVC架構，對於我來說這是有點雞肋，如果每個規範都彈性化，那規範真的就不較規範了!而這部份該如何去改善，其實現今各大主流的MVC框架都有相關作法，有空多讀讀核心原始碼即可知道!</p>
+
+<p>舉例來說，以cakephp為例：</p>
+
+<p>我們會在controller端把值傳到某個AJAX套用的ctp中，controller端會多以下function:</p>
+
+<pre><code>$this-&gt;set('cookieValue', $cookieValue);
+$this-&gt;layout = 'ajax';
+(就跟平常傳值到某ctp方法一樣)
+</code></pre>
+
+<p>而view端會在鄉對應的ctp中去echo出值，而AJAX就直接到這ctp裡面抓值，這就完成嚴謹的MVC架構的AJAX!</p>
+</div>
+
+</article>
+
+	<div class="share">
+	<div class="addthis_toolbox addthis_default_style ">
+	
+	<a class="addthis_button_facebook_like" fb:like:layout="button_count"></a>
+	
+	
+	<a class="addthis_button_tweet"></a>
+	
+	
+	<a class="addthis_counter addthis_pill_style"></a>
+	</div>
+  <script type="text/javascript" src="http://s7.addthis.com/js/250/addthis_widget.js#pubid="></script>
+</div>
+
+
+
+<section id="comment">
+    <h1 class="title">Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+</section>
+</div>
+			</div>
+			<footer id="footer" class="inner">Copyright &copy; 2013
+
+    Mr.Blue
+
+
+Design credit: <a href="http://shashankmehta.in/archive/2012/greyshade.html">Shashank Mehta</a></footer>
+			<script src="/javascripts/slash.js"></script>
+<script src="/javascripts/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+(function($){
+	$('.fancybox').fancybox();
+})(jQuery);
+</script> <!-- Delete or comment this line to disable Fancybox -->
+
+
+<script type="text/javascript">
+      var disqus_shortname = 'mrblue';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://iamblue.github.com/blog/2012/10/26/about-ajax/';
+        var disqus_url = 'http://iamblue.github.com/blog/2012/10/26/about-ajax/';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+
+
+		</div>
+	</div>
+</body>
+</html>

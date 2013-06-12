@@ -1,0 +1,2041 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[IamBlue]]></title>
+  <link href="http://iamblue.github.com/atom.xml" rel="self"/>
+  <link href="http://iamblue.github.com/"/>
+  <updated>2013-06-12T11:42:53+08:00</updated>
+  <id>http://iamblue.github.com/</id>
+  <author>
+    <name><![CDATA[Mr.Blue]]></name>
+    <email><![CDATA[tonyone0902@hotmail.com]]></email>
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Install Zsh to decorate your command line]]></title>
+    <link href="http://iamblue.github.com/blog/2013/06/11/install-zsh-to-decorate-your-command-line/"/>
+    <updated>2013-06-11T18:16:00+08:00</updated>
+    <id>http://iamblue.github.com/blog/2013/06/11/install-zsh-to-decorate-your-command-line</id>
+    <content type="html"><![CDATA[<p>zsh feature:(oh my zsh &mdash;> agnoster themeplate)</p>
+
+<ol>
+<li>只要按tab鍵即可快速顯示該層資料夾，並可用鍵盤去做選擇</li>
+<li><p>可自定義快捷鍵</p>
+
+<p> ex. git commit -am &lsquo;update&#8217;可去自行設成 git ac &#8216;update&rsquo;</p></li>
+<li><p>常用語法打錯會有防錯機制</p>
+
+<p> ex. ls打成sl他會自動判定成ls</p></li>
+<li><p>明確的顏色顯示該專案是否有東西更新（需要commit)，以及現在的分支是master還是其他分支</p></li>
+</ol>
+
+
+<p>Install steps:</p>
+
+<ol>
+<li>sudo apt-get install zsh</li>
+<li>curl -L <a href="https://github.com/robbyrussell/oh-my-zsh/raw/master/tools/install.sh">https://github.com/robbyrussell/oh-my-zsh/raw/master/tools/install.sh</a> | sudo sh</li>
+<li>vim ~/.zshrc 改這行：ZSH_THEME=&ldquo;agnoster&rdquo;</li>
+<li><p>若不喜歡中間的pwd路徑的話
+ 去 vim ~/.oh-my-zsh，把</p>
+
+<p> # Dir: current working directory</p>
+
+<p> prompt_dir() {
+     prompt_segment blue black &lsquo;%~&rsquo;
+ }
+ 的&#8217;%~&lsquo;改成&rsquo;%c&#8217;</p></li>
+<li><p>其他參照：
+<a href="https://gist.github.com/agnoster/3712874">https://gist.github.com/agnoster/3712874</a></p></li>
+<li>文字亂碼部分：
+<a href="https://gist.github.com/qrush/1595572">https://gist.github.com/qrush/1595572</a></li>
+</ol>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[About Hammer.js]]></title>
+    <link href="http://iamblue.github.com/blog/2013/01/15/about-hammer-dot-js/"/>
+    <updated>2013-01-15T10:27:00+08:00</updated>
+    <id>http://iamblue.github.com/blog/2013/01/15/about-hammer-dot-js</id>
+    <content type="html"><![CDATA[<p>淺談Hammer.js</p>
+
+<p>首先，先提一下為何用Hammer.js的原因：</p>
+
+<pre><code>1.他把在Html5裡的gesture和touch事件與原來傳統mouse事件做結合
+2.有針對各手指去做追蹤
+3.多功能的event事件
+</code></pre>
+
+<p>最後，結合以上&hellip;.只需要2KB，實在沒有不用它的道理!</p>
+
+<p>關於第一點，我們來看看他的lib (hammer.js)</p>
+
+<p>在line 556開始，我們可以看到它把mouse event 與其他事件綁在一起</p>
+
+<pre><code>//line 561.562
+case 'mousedown':
+case 'touchstart':
+
+//line 585.586
+case 'mousemove':
+case 'touchmove':
+
+//line 609~612
+case 'mouseup':
+case 'mouseout':
+case 'touchcancel':
+case 'touchend':
+</code></pre>
+
+<p>簡單來講，這樣的好處就是，今天只要寫一行 event 就可以把用滑鼠的user與用觸控板的user發生的行為考慮進去</p>
+
+<p>第二點，對於個別手指的追</p>
+
+<pre><code>//line 561.562
+case 'mousedown':
+case 'touchstart':
+
+//line 585.586
+case 'mousemove':
+case 'touchmove':
+</code></pre>
+
+<p>這兩行在處理的第一件事情，就是去做計算各手指，如下：</p>
+
+<pre><code>count = countFingers(event);
+
+//來追蹤一下countFingers在做什麼事情
+
+function countFingers( event )
+{
+    return event.touches ? event.touches.length : 1;
+}
+</code></pre>
+
+<p>但是請注意它的註解</p>
+
+<pre><code>// there is a bug on android (until v4?) that touches is always 1,
+// so no multitouch is supported, e.g. no, zoom and rotation...
+</code></pre>
+
+<p>這點我在於android 2.7的確是array為1 ，因此我建議，每次在取個手指的行為時，盡量用迴圈去偵測它（從0開始）</p>
+
+<p>接下來，每個事件可以取用的行為資料也不一樣，舉例來說：</p>
+
+<pre><code>//line 561開始
+case 'mousedown':
+case 'touchstart':
+
+triggerEvent("dragend", {
+    originalEvent   : event,
+    direction       : _direction,
+    distance        : _distance,
+    angle           : _angle
+});
+//可取的資料就是direction , distance , angle
+</code></pre>
+
+<p>其他同理可看出，整理如下</p>
+
+<pre><code>1.mousedown , touchstart部分：
+    direction : 上下左右  其他方向不行
+    distance : 距離 （單位象素.有浮點數）
+    angle ：角度
+
+2.mousemove , touchmove':
+    無
+
+3.mouseup , mouseout , touchcancel , touchend :
+    這邊判斷式稍多，主要是先偵測他之前的行為是什麼？(drag? or transform?)
+    之後呈現：
+        position ： X.Y 座標
+</code></pre>
+
+<p>至於，在View端的簡單範例寫法如下，：</p>
+
+<pre><code>(function ($) {
+    var $sw = $('#swipeme'),
+        $output = $('#output');
+
+    $sw.on('hold tap swipe doubletap transformstart transform transformend dragstart drag dragend swipe release', function (event) {
+        event.preventDefault();
+
+        $output.prepend("Type: " + event.type + ", Fingers: " + event.touches.length + ", Direction: " + event.direction + ", distance: "+ event.distance +"&lt;br/&gt;");
+    });
+    //上述你可以加進想要呈現的data
+    // this is how you unbind an event
+    /*$sw.on('swipe', function (event) {
+        event.preventDefault();
+
+        $sw.off('tap');
+    });*/
+}(jQuery));
+</code></pre>
+
+<p>有人會問，為何要寫&#8221;event.preventDefault();&ldquo;？</p>
+
+<p>因為我們在使用觸控螢幕時，有些手勢是該平板預設的放大縮小行為，可是這個行為在瀏覽器上我們不打算這樣做，用這個語法可以防止這種現象。</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[一些關於javascript OO (Object Oriented) issue]]></title>
+    <link href="http://iamblue.github.com/blog/2013/01/09/%5B%3F%5D-xie-guan-yu-newde-zheng-yi/"/>
+    <updated>2013-01-09T13:54:00+08:00</updated>
+    <id>http://iamblue.github.com/blog/2013/01/09/[?]-xie-guan-yu-newde-zheng-yi</id>
+    <content type="html"><![CDATA[<p>不用this (oo)的寫法：</p>
+
+<pre><code>var yoyo ={
+
+    a:function(){
+        //blabla...
+    }
+    b:function(){
+        //blabla...
+    }
+
+}
+yoyo.a();
+</code></pre>
+
+<p>用this (oo)的寫法：</p>
+
+<pre><code>var hihi = function (){
+    this.a = function(){
+        console.log('a');
+    }
+    this.b = function (){
+        console.log('b');
+    }
+}
+var hihi2 = new hihi;  //注意  這邊寫 new hihi(); 也可以
+hihi2.a();   // a
+</code></pre>
+
+<p>prototype 繼承演示</p>
+
+<pre><code>var hihi = function (){
+    this.a = function(){
+        //blabla
+    }
+    this.b = function (){
+        //blabla
+    }
+}
+</code></pre>
+
+<p>今天若想繼承上列，再加個hihi內個下列類別：</p>
+
+<pre><code>var yoyo = function(){
+    this.c = function (){
+        console.log('c');
+    }
+}
+</code></pre>
+
+<p>要先</p>
+
+<pre><code>yoyo.prototype = new hihi;
+var show = new yoyo; 
+
+show.a(); // a  
+show.c(); // c
+</code></pre>
+
+<p>網路上看過一些繼承.洗掉問題</p>
+
+<pre><code>var ccc = function (){};
+ccc.prototype.yoyo = function(){
+    console.log('123')
+}
+ccc.prototype.titi = function(){
+    console.log('456');
+}
+//ccc.prototype={};//因為這個已經把東西洗掉，所以其他人沒得繼承
+var eee = new ccc();
+var fff = new ccc();
+eee.yoyo = function(){
+    console.log('777');
+}
+ccc.prototype={};  //因為先前已經繼承過了，所以東西還在
+eee.yoyo();
+fff.yoyo();
+</code></pre>
+
+<p>再來，想來聊聊效能問題，網路上有人寫了這篇測試文</p>
+
+<blockquote><p><a href="http://jsperf.com/prototype-operator-performance">http://jsperf.com/prototype-operator-performance</a></p></blockquote>
+
+<p>他比較了三種方法：</p>
+
+<pre><code>A: 正是我上述提到的this(OO)寫法
+B: 與我上述提到的繼承部分，額外加類別進prototype方法
+C: 一般的prototype寫法
+</code></pre>
+
+<p>有興趣可以看這作者blog的比較文</p>
+
+<blockquote><p><a href="http://fred-zone.blogspot.tw/2012/04/javascript-class.html">http://fred-zone.blogspot.tw/2012/04/javascript-class.html</a></p></blockquote>
+
+<p>直接提結論：</p>
+
+<pre><code>單純比較 呼叫方法(Call Method) ，不使用 Prototype 略勝一疇
+比較建立實例(Instance) 的速度，使用 Prototype 快過其他實作近 20 倍，且B方法速度也快過其他方式
+</code></pre>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Array and Object]]></title>
+    <link href="http://iamblue.github.com/blog/2013/01/09/array-and-object/"/>
+    <updated>2013-01-09T10:49:00+08:00</updated>
+    <id>http://iamblue.github.com/blog/2013/01/09/array-and-object</id>
+    <content type="html"><![CDATA[<p>Let&rsquo;s talk about Array and Object on data access application (by javascript).</p>
+
+<p>&mdash;&mdash;Array</p>
+
+<p>Basic operating:
+Read a array:</p>
+
+<pre><code>var user = ['blue','tony','chen'];
+console.log(user[0]);//'blue'
+</code></pre>
+
+<p>Add a element into a array:</p>
+
+<pre><code>var aaa = new Array();
+aaa.push('123');
+aaa.push('456'); 
+console.log(aaa)// ['123','456']
+</code></pre>
+
+<hr />
+
+<p>Object</p>
+
+<p>Basic operating:
+Read a Object:</p>
+
+<pre><code>var info = { user:'blue'};
+console.log(info.user);//'blue';
+</code></pre>
+
+<p>add a Object:</p>
+
+<pre><code>var info ={}
+info.user = 'blue';
+console.log(info);//{user:'blue'}
+</code></pre>
+
+<p>If you have a complete data and you want to merge into a one line,you can do that:</p>
+
+<pre><code>//combine with array and object
+
+var alldata = [
+    {user:'blue',sex:'male'},
+    {user:'Tony',sex:'male'}
+]
+
+//Read
+console.log(alldata[0].user) // 'blue'
+//etc...
+</code></pre>
+
+<p>If you have a complex data ,you will be confused about these complex code.So, you can use &ldquo;break point&rdquo; tools to read this data.There are lots of tools support &ldquo;breakpoint&rdquo;:</p>
+
+<p>google chrome</p>
+
+<blockquote><p><a href="https://developers.google.com/chrome-developer-tools/docs/scripts-breakpoints">https://developers.google.com/chrome-developer-tools/docs/scripts-breakpoints</a></p></blockquote>
+
+<p>visual studio</p>
+
+<blockquote><p><a href="http://msdn.microsoft.com/en-us/library/02ckd1z7.aspx">http://msdn.microsoft.com/en-us/library/02ckd1z7.aspx</a></p></blockquote>
+
+<p>Have Fun!</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[RequireJS]]></title>
+    <link href="http://iamblue.github.com/blog/2013/01/03/requirejs/"/>
+    <updated>2013-01-03T00:14:00+08:00</updated>
+    <id>http://iamblue.github.com/blog/2013/01/03/requirejs</id>
+    <content type="html"><![CDATA[<p>RequireJS</p>
+
+<p>在進入RequireJS之前，我想先帶各位了解requireJS的優點，以及為何我們要用requireJS?</p>
+
+<p>1.可以&#8221;快速&#8221;且&#8221;清楚&#8221;了解這個function引用了哪些外部呼叫js</p>
+
+<p>首先，假如我們有很多很多的function在同一頁中，且這些function都彼此間互相引用或者是大量引用外部呼叫的js文件時，這對於後續維護非常麻煩（特別是每次修function要去打開一堆相關的外部呼叫文件找），因此requireJS的function架構上，可以讓我們快速了解引用了哪些外部文件，例如：</p>
+
+<pre><code>require(["jquery.alpha","jquery.beta"], function(aaa,bbb) {
+    //your code
+});
+</code></pre>
+
+<p>有此式我們可以得知這個function引用了jquery.alpha和jquery.beta兩個外部js檔.</p>
+
+<p>2.可以讓你直覺且客觀的減少定義到全局變量
+這部份就是指javascript很基本的全局和區域觀念，不多說.</p>
+
+<p>3.實作：</p>
+
+<p>[html端]
+head引用：</p>
+
+<pre><code>&lt;script data-main="scripts/main" src="scripts/require-jquery.js"&gt;&lt;/script&gt;
+</code></pre>
+
+<p>請注意此main是指main.js，他的路徑必須在 scripts/ 之下，而其他爾後要引用的js檔也盡量都放在 scripts/ 之下，這樣之後若引用出某文件時，可以不用再調整絕對路徑.</p>
+
+<p>body引用：</p>
+
+<pre><code>require(["jquery.alpha","jquery.beta"], function(a,b) {
+     b.addit();
+     a.alpha(h1);
+});
+</code></pre>
+
+<p>請注意，引用進來的一個外部js必須要給他一個namespase（比如說jquery.alpha的namespace就是a）而若今天想引用外部文件(jquery.alpha)的某一function叫做addit()，則寫a.addit();</p>
+
+<p>[js端]
+js端可以define也可以reqiure文件，一般而言外部js內常寫define，如下（請注意看我註解的部份）：</p>
+
+<pre><code>define(function () {
+   function tools(str) {
+      console.log(str);
+    };
+
+  return {
+    alpha: function (str) {
+      console.log(str);
+      tools(str)  //這時候call的tools function是有作用的
+      yoyo(str)   //請注意！這時候call的yoyo是沒有作用的
+    }
+    yoyo: function (str){
+        console.log(str);
+    }
+  }
+});
+</code></pre>
+
+<p>也就是說，在return以上的function是可以在同一個return內部同一function裡相互間call,但是寫在其他地方的function則無法call，基於這個原因，我的建議是，這部份盡量採取把&#8221;執行&#8221;和&#8221;call&#8221;分開架構格式，像是：</p>
+
+<pre><code>define(function () {
+   function tools(str) {
+      console.log(str);
+    };
+    //以上寫執行內容
+
+  return {
+    tools: function (str) {
+      tools(str);
+    }
+    //以上負責call function
+  }
+});
+</code></pre>
+
+<p>首先define到return之間，把它想像成專放負責&#8221;執行&#8221;的程式，而return以下的就是專門放&#8221;call&#8221; functions，這樣可以很清楚的分類架構.</p>
+
+<p>補充幾點：</p>
+
+<p>若你在html端上有設定onclick事件（DOM 0級的），像是：</p>
+
+<pre><code>&lt;button id="thisbtn" onclick="hihi();"&gt;yoyo&lt;/button&gt;
+</code></pre>
+
+<p>請注意這時候的hihi  function一定要在require外面，他才會被導向此function，像是:</p>
+
+<pre><code>function yoyhihi(){
+        alert('yoyo');
+};
+require(["jquery.alpha","jquery.beta"], function(a,b) {
+    //不能放這裡面，他會抓不到       
+});
+</code></pre>
+
+<p>這樣的話代碼變成很難控管，所以盡量不要用DOM 0級方法寫，用addEventListner去做監聽event方法較佳！</p>
+
+<p>4.結論</p>
+
+<p>根據上述初步學習requireJS的調用架構，我們可以有一些心得，RequireJS可以讓你快速看出程式來源.方便修改，不過相對的代價就是，在建立function時會比直接寫還要花較多的時間，因此：</p>
+
+<pre><code>1.如果你的專案前端的js function非常的少.很輕量那麼我建議不要用RequireJS，這會大大降低開發速度
+
+2.如果你的專案前端js系統非常複雜，日後維護已經達到找文件都非常耗時時，就用它吧！
+</code></pre>
+
+<p>至於專案的大小區別，最好的方式就是一開始盡量評估準確！</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[onclick and addEventListner]]></title>
+    <link href="http://iamblue.github.com/blog/2012/12/06/onclick_addeventlistner/"/>
+    <updated>2012-12-06T23:18:00+08:00</updated>
+    <id>http://iamblue.github.com/blog/2012/12/06/onclick_addeventlistner</id>
+    <content type="html"><![CDATA[<p>onclick event and addEventListner(&ldquo;click&rdquo;,fuc(),boolin)
+The major difference of them is their DOM type.&ldquo;Onclick event&rdquo; is DOM 0,and addEventListner(&ldquo;click&rdquo;,fuc(),boolin) is DOM 2.</p>
+
+<p>DOM 0 means it controls a single event, and DOM 2 controls a multiple events,</p>
+
+<p>Most of using javascript to build app platforms have forbidden operating DOM 0.Like as winJS,you can see following code:</p>
+
+<pre><code>&lt;Button id="yourid" onclick="yourcodename();" value="hihi"&gt;
+
+&lt;script&gt;
+    function yourcodename(){
+        //your code
+    }
+&lt;/script&gt;
+</code></pre>
+
+<p>Above call behavior is not used on winJS,we must change DOM 0 type to DOM 2 type:</p>
+
+<pre><code>&lt;Button id="yourid" value="hihi"&gt;
+&lt;div id="showfn"&gt;
+&lt;/div&gt;
+&lt;script&gt;
+    var listnerbtn = document.getElementById('yourid');
+    listnerbtn.addEventListner('click', ,false)
+    function show(){
+        var addhtmltagcontent = '';
+        addhtmltagcontent += '&lt;div&gt;I am Blue Chen!&lt;/div&gt;';
+        document.getElementById('showfn').innerHTML= addhtmltagcontent ;
+    }
+&lt;/script&gt;
+</code></pre>
+
+<p>Above code will be used!However, if you want to call a function which is bringing a variable:</p>
+
+<pre><code>&lt;Button id="yourid" onclick="yourcodename(str)" value="hihi"&gt;
+                                          ^^^^
+</code></pre>
+
+<p>You can do that:</p>
+
+<pre><code>&lt;Button id="yourid" value="hihi"&gt;
+&lt;div id="buttonidvariable" style="display:none"&gt;
+    document.write(str);
+&lt;/div&gt;
+&lt;script&gt;
+    var listnerbtn = document.getElementById('yourid');
+    listnerbtn.addEventListner('click', getvalue,false)
+    function getvalue(){
+        var getstrvalue = document.getElementById('buttonidvariable').innerHTML
+        doyouwanttodofn(getstrvalue );
+    }
+    function doyouwanttodofn(){
+        //your code
+    }
+&lt;/script&gt;
+</code></pre>
+
+<p>Enjoy it!</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[validate on different format count]]></title>
+    <link href="http://iamblue.github.com/blog/2012/12/06/validation-on-count/"/>
+    <updated>2012-12-06T08:32:00+08:00</updated>
+    <id>http://iamblue.github.com/blog/2012/12/06/validation-on-count</id>
+    <content type="html"><![CDATA[<p>About count format.</p>
+
+<p>In America, most of people are used to using “1,000.00” format.However,this format is not written in the database directly.In today’s common MVC framework. They have some similar attempts to prevent this format write in the database.But these attempts often build in back-end.Standing on the user’s view,if you type this format and sent this page. You will see an error page after few second and you will type it again…The phenomenon is not a good UI.So, I suggest we should do validation on the front-end and solve this problem.</p>
+
+<p>View</p>
+
+<p><img src="http://iamblue.github.com/images/post_img/validate_on_count/product_info_1.png"/></p>
+
+<p>We have four form to type in.First form is Estimated Price. Second form is Estimated shipping.Third form is Estimated Tax.Fourth form is Total cost which is combine above (three) form&#8217; value.When we type one of three forms ,the &ldquo;Total cost&rdquo; form will replace its value.</p>
+
+<p>Validate code(javascript)</p>
+
+<p>1.capture form value</p>
+
+<pre><code>var EstimatedPrice =document.getElementById("EstimatedPrice").value,
+    EstimatedShipping =document.getElementById("EstimatedShipping").value,
+    EstimatedTax=document.getElementById("EstimatedTax").value; 
+</code></pre>
+
+<p>hint! the type of this value is Number. We have to change the type to &ldquo;String&rdquo;.</p>
+
+<pre><code>var RegEstimatedPrice = EstimatedPrice.toString(),
+    RegEstimatedTax= EstimatedTax.toString(),
+    RegEstimatedShipping= EstimatedShipping.toString();
+</code></pre>
+
+<p>After change the type to string, we can use &ldquo;replace&rdquo; function to exclude &ldquo;,&rdquo;</p>
+
+<pre><code>RegEstimatedPrice = RegEstimatedPrice.replace(',','');
+RegEstimatedTax = RegEstimatedTax.replace(',','');
+RegEstimatedShipping = RegEstimatedShipping.replace(',','');
+</code></pre>
+
+<p>We want to check the content of string,don&rsquo;t allow non-number context.(Using the regular expression)</p>
+
+<pre><code>var score = [RegEstimatedPrice ,RegEstimatedTax,RegEstimatedShipping],
+    regexCheck = /^-?\d+\.?\d*?$/;
+
+var checktotal =0;
+if (score[0].match(regexCheck)==null || score[1].match(regexCheck)==null ||score[2].match(regexCheck)==null){ 
+        checktotal=1;
+}
+</code></pre>
+
+<p>If the string pass above validation, we change its type(string to Number).why? See follow.</p>
+
+<pre><code>RegEstimatedPrice = Number(RegEstimatedPrice);
+RegEstimatedTax = Number(RegEstimatedTax);
+RegEstimatedShipping = Number(RegEstimatedShipping);
+</code></pre>
+
+<p>Follow function will be excute when the type of variable is number .</p>
+
+<pre><code>var total = RegEstimatedTax+RegEstimatedShipping+RegEstimatedPrice;
+</code></pre>
+
+<p>2.Currency</p>
+
+<pre><code>currency = '';
+
+if(document.getElementById("Currency").value == "CAD")
+    currency = "$";     
+else if(document.getElementById("Currency").value == "EUR")
+    currency = "&amp;euro;";        
+else if(document.getElementById("Currency").value == "GBP")
+    currency = "&amp;pound;";
+else if(document.getElementById("Currency").value == "JPY")
+    currency = "&amp;yen;";     
+else
+    currency = "$";
+</code></pre>
+
+<p>3.total count</p>
+
+<pre><code>if(checktotal==0){
+    document.getElementById("id_total_amt").innerHTML= "&lt;b&gt;"+currency+""+total.toFixed(2)+"&lt;/b&gt;";
+    document.getElementById('needprice_estimate').value = total;
+}
+else{
+    document.getElementById("id_total_amt").innerHTML=currency+"NaN";
+    document.getElementById('needprice_estimate').value = currency+"0.00";
+}
+</code></pre>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[[project] 進度追蹤]]></title>
+    <link href="http://iamblue.github.com/blog/2012/12/01/project/"/>
+    <updated>2012-12-01T00:19:00+08:00</updated>
+    <id>http://iamblue.github.com/blog/2012/12/01/project</id>
+    <content type="html"><![CDATA[<br/>
+
+
+<p>最近跟許多正在創業的朋友聊聊一些工作上的事情，常常聽到的都是再抱怨bug太多做不完或者是工程師工作進度緩慢</p>
+
+<p>小弟不才  不敢說能提出有多強心劑的解藥，不過工作至今對於專案管理心得最多。首先，關於program規劃部分，我想這部份就不用多說，每家都有每家的作法，有了良好的program架構，還要有良好的製作執行力.</p>
+
+<p>我記得剛進公司時，測試了許多家的專案管理軟體；個人最推薦JIRA，請務必善用他的各項追蹤方法，不過我覺得他們最好用的地方在於可擴充性高，可以針對公司的專案進度審核程序去做設計，這部份的詳情我以後會慢慢分享，畢竟，打這篇文章想談點非程式上的事情.</p>
+
+<p>目前我身為工程師，最容易發現的狀況就是:</p>
+
+<p>在執行專案製作時，做到一半突然發現比想像中還要困難，而且解決的時間往往超過一開始預估的時間，這時候好笑的地方就來了，大家往往都是去專案管理那邊調時間（不調你的PM會不爽）這樣的結果只會讓進度落後的原因沒有改善，這才是問題的根本.</p>
+
+<p>我認為這問題僅僅有專案管理軟體在控制進度還不夠，事實上要改善的話必須要有個無形的推手去推動工程師，我相信很多公司都有寫程式的績效獎金（或者是福利），而這些獎金通常是建立在工程師有完成專案的前提才有，在這制度作為輔助的情形下，我設計一個方法可以增加工程師的效率和增加團隊合作的機會。</p>
+
+<p>假設一位工程師對於某個專案的完成預計時間是2天，公司要設計一個專案死限，比如說就是4天，假設那個工程師在四天內沒有把專案完成，那麼即使他多花了幾天的時間完成了，這個專案結案人上面他仍然不能寫上自己名字（也就是這份績效不能算他的）</p>
+
+<p>這聽起來很不人道，會這麼做是在於，若遇到大的專案（在預估之前看起來不是，可是執行的時候發現比想像中大）若都是一位工程師自己在蠻幹，其他人則無法隨時進來幫忙，沒有有效利用團隊合作.</p>
+
+<p>如果他想要讓這份績效算他的，當然有其他辦法，請他在第四天的死限之前，要把自己的專案未完成的部份切割出來另開專案，也就是說把大專案分成小專案（他仍可以在自己的專案上簽字結算）讓其他人隨時可以接手幫忙做，這樣的作法不僅可以讓工程師拿到該他拿的，也可以促進團隊間的效率.</p>
+
+<p>以上的作法歡迎各位一起討論！</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[BACKBONE.JS]]></title>
+    <link href="http://iamblue.github.com/blog/2012/11/26/backbone-dot-js/"/>
+    <updated>2012-11-26T10:22:00+08:00</updated>
+    <id>http://iamblue.github.com/blog/2012/11/26/backbone-dot-js</id>
+    <content type="html"><![CDATA[<p>BACKBONE.js</p>
+
+<p>Before learning BACKBONE.js, we should know what extended javascript lib will be included in BACKBONE.js project.</p>
+
+<p>1.JQuery
+2.UNDERSCORE.js</p>
+
+<p>BACKBONE.js brings the conception of MVC into front-end.
+The major difference between BACKBONE.js MVC and Back-end MVC is the word of C. Generally,back-end C mean &lsquo;controller&rsquo;,but BACKBONE.js C mean &lsquo;Collection&rsquo;.</p>
+
+<p>BACKBONE.JS core:</p>
+
+<p>1.Router</p>
+
+<pre><code>var url  = Backbone.Router.Extend({
+    routes:{
+      '/isdate': 'getPost',
+      '*actions': 'errorPage'
+    },
+
+    getPost: function(id){
+      alert(id)
+    },
+    errorPage: function(actions){
+      alert('sorry we can not find'+actions+'page');
+    }
+});
+</code></pre>
+
+<p>2.Model</p>
+
+<p>When you are recieving a data from front-end and you want to build(or modify) this data to storage(or database).Of course, before you building this data into database, you must give this data some limitations and write in Model.</p>
+
+<pre><code>var Todo = Backbone.Model.extend({
+
+    // Default attributes for the todo item.
+    //設定預設值
+    defaults: function() {
+      return {
+        title: "empty todo...",
+        order: Todos.nextOrder(),
+        done: false
+      };
+    },
+
+    // Ensure that each todo created has `title`.
+    //設定每一筆資料都不能為空，限制title不為空
+    initialize: function() {
+      if(!this.get("title")) {
+        this.set({
+          "title": this.defaults().title
+        });
+      }
+    },
+
+    // Toggle the `done` state of this todo item.
+    //這邊比較難理解，等等看view就會知道
+    toggle: function() {
+      this.save({
+        done: !this.get("done")
+      });
+    }
+});
+</code></pre>
+
+<p>3.Collection</p>
+
+<p>Like back-end controller, BACKBONE.js collection do parsing on database.However,BACKBONE.js collection can deal with all model or single model.It very convenient for coder to do more combination on front-end.</p>
+
+<pre><code>var TodoList = Backbone.Collection.extend({
+    model: Todo,
+
+    // Save all of the todo items under the `"todos-backbone"` namespace.
+    localStorage: new Backbone.LocalStorage("todos-backbone"),
+
+
+    // Filter down the list of all todo items that are finished.
+    //從LocalStorage獲取已經完成的
+    done: function() {
+        return this.filter(function(todo) {
+            return todo.get('done');
+        });
+    },
+    //補充filter函數就是做搜尋符合字串者就提出來
+    //http://documentcloud.github.com/underscore/#filter
+
+
+    //在資料表中獲取未完成數據
+    remaining: function() {
+        return this.without.apply(this, this.done());
+    },
+    //without 即是把符合字串者的排除掉
+    //http://documentcloud.github.com/underscore/#without
+    //apply即傳入函數的意思，這是javascript 原生語法
+
+
+    //獲得下一組的排序序號
+    nextOrder: function() {
+        if(!this.length) return 1; 
+        return this.last().get('order') + 1;
+    },
+
+    // 讓資料依據order來排列
+    comparator: function(todo) {
+        return todo.get('order');
+    }
+    //comparator為backbone的内置函数，作用就是collection中數據排序的依據
+    //function(model){
+    //  return todo.get('JSON中排序的依據');
+    //}
+    //http://documentcloud.github.com/backbone/#Collection-comparator
+
+});
+var Todos = new TodoList;
+//這個意思是只創建一個全局的todo  collection
+</code></pre>
+
+<p>4.View
+In the demo,its view divid into two parts.</p>
+
+<p>Part1.</p>
+
+<p>This view acting on every todo item</p>
+
+<p><img src='http://iamblue.github.com/images/post_img/BACKBONE_JS/backbone_demo_view1.png'></p>
+
+<pre><code>var TodoView = Backbone.View.extend({
+
+    //... is a list tag.
+    tagName: "li",
+    //作用:  把&lt;script type="text/template"&gt;標籤的html碼放在這之中
+
+    // Cache the template function for a single item.
+    template: _.template($('#item-template').html()),
+    //抓取id 為item-template 的&lt;script type="text/template"&gt;裡面的html碼
+
+    // The DOM events specific to an item.
+    events: {
+        "click .toggle": "toggleDone",
+        "dblclick .view": "edit",
+        "click a.destroy": "clear",
+        "keypress .edit": "updateOnEnter",
+        "blur .edit": "close"
+        // blur 指的是輸入域失去焦點時就動作
+        //請參考jquery http://www.w3school.com.cn/jquery/event_blur.asp
+    },
+    //above all 可以參考這個BACKBONE api說明
+    //http://documentcloud.github.com/backbone/#View-extend
+
+
+    // The TodoView listens for changes to its model, re-rendering. Since there's
+    // a one-to-one correspondence between a **Todo** and a **TodoView** in this
+    // app, we set a direct reference on the model for convenience.
+    //初始化
+    initialize: function() {
+        this.model.on('change', this.render, this);
+        //http://documentcloud.github.com/backbone/#Model-changed
+        this.model.on('destroy', this.remove, this);
+        //http://documentcloud.github.com/backbone/#Model-destroy
+    },
+
+    // Re-render the titles of the todo item.
+    render: function() {
+        this.$el.html(this.template(this.model.toJSON()));
+        this.$el.toggleClass('done', this.model.get('done'));
+        //$el 是召喚jQuery 
+        this.input = this.$('.edit');
+        return this;
+    },
+
+    // Toggle the `"done"` state of the model.
+    toggleDone: function() {
+        this.model.toggle();
+    },
+    //*******************************
+    // 回到Model的toggle function
+    //*******************************
+
+
+    // Switch this view into `"editing"` mode, displaying the input field.
+    edit: function() {
+        this.$el.addClass("editing");
+        this.input.focus();
+        //在textfield裡面出現可以打字狀態
+    },
+
+    // Close the `"editing"` mode, saving changes to the todo.
+    close: function() {
+        var value = this.input.val();
+        if(!value) {
+            this.clear();
+        } else {
+            this.model.save({
+            title: value
+            });
+            this.$el.removeClass("editing");
+        }
+    },
+
+    // If you hit `enter`, we're through editing the item.
+    updateOnEnter: function(e) {
+        if(e.keyCode == 13) this.close();
+    },
+
+    // Remove the item, destroy the model.
+    clear: function() {
+        this.model.destroy();
+    }
+
+  });
+</code></pre>
+
+<p>part2.</p>
+
+<p><img src='http://iamblue.github.com/images/post_img/BACKBONE_JS/backbone_demo_view2.png'></p>
+
+<pre><code>var AppView = Backbone.View.extend({
+
+    // Instead of generating a new element, bind to the existing skeleton of
+    // the App already present in the HTML.
+    el: $("#todoapp"),
+    //把下面事件綁定在todoapp裡面
+
+    // Our template for the line of statistics at the bottom of the app.
+    statsTemplate: _.template($('#stats-template').html()),
+
+    // Delegated events for creating new items, and clearing completed ones.
+    events: {
+        "keypress #new-todo": "createOnEnter",
+        "click #clear-completed": "clearCompleted",
+        "click #toggle-all": "toggleAllComplete"
+    },
+
+    // At initialization we bind to the relevant events on the `Todos`
+    // collection, when items are added or changed. Kick things off by
+    // loading any preexisting todos that might be saved in *localStorage*.
+    initialize: function() {
+
+        this.input = this.$("#new-todo");
+        this.allCheckbox = this.$("#toggle-all")[0];
+
+        Todos.on('add', this.addOne, this);
+        Todos.on('reset', this.addAll, this);
+        Todos.on('all', this.render, this);
+
+        this.footer = this.$('footer');
+        this.main = $('#main');
+
+        Todos.fetch();
+        //讓你知道目前從local storage取出的最新狀態
+    },
+
+    // Re-rendering the App just means refreshing the statistics -- the rest
+    // of the app doesn't change.
+    render: function() {
+        var done = Todos.done().length;
+        var remaining = Todos.remaining().length;
+
+        if(Todos.length) {
+            this.main.show();
+            this.footer.show();
+            this.footer.html(this.statsTemplate({
+                done: done,  //傳值到html
+                remaining: remaining //傳值到html
+            }));
+        } else {
+            this.main.hide();
+            this.footer.hide();
+            //如果都沒有的話main 和footer div都會消失
+        }
+        this.allCheckbox.checked = !remaining;
+    },
+
+    // Add a single todo item to the list by creating a view for it, and
+    // appending its element to the `&lt;ul&gt;`.
+    addOne: function(todo) {
+        var view = new TodoView({
+            model: todo
+        });
+
+        //新增一個上面提的TodoView 
+        this.$("#todo-list").append(view.render().el);
+    },
+
+    // Add all items in the **Todos** collection at once.
+    //把Todos中的所有数据渲染到页面,页面加载的时候用到  
+    addAll: function() {
+        Todos.each(this.addOne);
+    },
+
+    // If you hit return in the main input field, create new **Todo** model,
+    // persisting it to *localStorage*.
+    createOnEnter: function(e) {
+        if(e.keyCode != 13) return;
+        if(!this.input.val()) return;
+
+        Todos.create({
+            title: this.input.val()
+        });
+        this.input.val('');
+    },
+
+    // Clear all done todo items, destroying their models.
+    clearCompleted: function() {
+        _.invoke(Todos.done(), 'destroy');
+        return false;
+    },
+
+    toggleAllComplete: function() {
+        var done = this.allCheckbox.checked;
+        Todos.each(function(todo) {
+            todo.save({
+                'done': done
+            });
+        });
+    }
+
+});
+// Finally, we kick things off by creating the **App**.
+var App = new AppView;
+//別忘了要創建出這個view
+</code></pre>
+
+<p>Front-end layout:</p>
+
+<ol>
+<li>Template:</li>
+</ol>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Javascript Patterns]]></title>
+    <link href="http://iamblue.github.com/blog/2012/11/12/javascript-patterns/"/>
+    <updated>2012-11-12T21:01:00+08:00</updated>
+    <id>http://iamblue.github.com/blog/2012/11/12/javascript-patterns</id>
+    <content type="html"><![CDATA[<p>About Javascript Patterns , you can see this github:</p>
+
+<blockquote><p><a href="http://shichuan.github.com/javascript-patterns/">http://shichuan.github.com/javascript-patterns/</a></p></blockquote>
+
+<h1>Issue1:Function Declarations</h1>
+
+
+<ul>
+<li>creating anonymous functions and assigning them to a variable
+
+<blockquote><p><a href="https://github.com/shichuan/javascript-patterns/blob/master/general-patterns/function-declarations.html">https://github.com/shichuan/javascript-patterns/blob/master/general-patterns/function-declarations.html</a></p></blockquote></li>
+</ul>
+
+
+<p>在談談這個主題之前，我想要先了解js架構：</p>
+
+<pre><code>function a(){
+    alert('123');
+}
+console.log(a);
+</code></pre>
+
+<p>這時候如果把console.log(a)這行搬到第一行時，也就是如下：</p>
+
+<pre><code>console.log(a);
+function a(){
+    alert('123');
+}
+</code></pre>
+
+<p>他仍輸出一樣的結果，原因是js在讀取時會先把所有funciton先讀，然後再讀其他的東西.</p>
+
+<p>不夠清楚？</p>
+
+<p>在舉個例子，如果今天出現如下狀況：</p>
+
+<pre><code>console.log(a.toString());
+function a(){
+    alert('123');
+}
+function a(){
+    alert('567');
+}
+</code></pre>
+
+<p>則出來的結果是：</p>
+
+<pre><code>function a(){
+    alert('456');
+}
+[Finished in 0.1s]
+</code></pre>
+
+<p>也就是說 如果遇到兩個都是相同命名的function時，後面的會覆蓋掉前面的同名function.</p>
+
+<p>OK，直接切入這個主體，先看看這個程式碼：</p>
+
+<pre><code>function getData() {
+}
+</code></pre>
+
+<p>這個程式碼本身來說是沒有問題的，但是原因在於js開發者必須要盡量把所有定義的東西用object去定義，這是一個良好的習慣，因為這樣可以幫助開發者去理解和使用他，本主題有討論兩種改善方式：</p>
+
+<p>第一種：</p>
+
+<pre><code>var getData = function () {
+            };
+</code></pre>
+
+<p>第二種：</p>
+
+<pre><code>var getData = function getData() {
+        };
+</code></pre>
+
+<p>第二種的最大好處是在於，可以讓getData function 可以去做內部call迴圈，比如說：</p>
+
+<pre><code>var a = function a(){
+    console.log('123'+a);
+};
+a();
+</code></pre>
+
+<p>結果為：</p>
+
+<pre><code>123function a(){
+    console.log('123'+a);
+}
+</code></pre>
+
+<p>但是，有件奇怪的事情來了，如果我有個代碼如下：</p>
+
+<pre><code>console.log(a.toString());
+var a = function a(){
+    alert('123');
+};
+</code></pre>
+
+<p>竟然出現錯誤!若改成：</p>
+
+<pre><code>var a = function a(){
+    alert('123');
+};
+console.log(a.toString());
+</code></pre>
+
+<p>則成功，這樣的例子可以說明，js在讀取時事先把function先讀完，而已經被定義過的object不會先讀取.</p>
+
+<h1>Issue2:Conditionals </h1>
+
+
+<ul>
+<li>pattern and antipattern of using if else</li>
+</ul>
+
+
+<blockquote><p><a href="https://github.com/shichuan/javascript-patterns/blob/master/general-patterns/conditionals.html">https://github.com/shichuan/javascript-patterns/blob/master/general-patterns/conditionals.html</a></p></blockquote>
+
+<p>先來看第一個程式碼：</p>
+
+<pre><code>if (type === 'foo' || type === 'bar') {
+}
+</code></pre>
+
+<p>=== 其實就是&#8221;格式符合&#8221;且&#8221;內容物完全一樣&#8221;則就是true 不符合則就是false</p>
+
+<p>console.log(1 === 1) 結果就是true 因為兩邊都是number</p>
+
+<p>console.log(&ldquo;1&rdquo; === 1) 結果就是false 因為前者是string 後者為number</p>
+
+<p>console.log(&ldquo;1&rdquo; === &ldquo;2&rdquo;) 結果就是false，雖然都是string，但是string 的1與2不同</p>
+
+<p>作者建議的寫法一：</p>
+
+<pre><code>if (/^(foo|bar)$/.test(type)) {
+        }
+</code></pre>
+
+<p>這部份就是regex test，詳情我建議看這網站，很詳細</p>
+
+<blockquote><p><a href="http://blog.roodo.com/rocksaying/archives/2670695.html">http://blog.roodo.com/rocksaying/archives/2670695.html</a></p></blockquote>
+
+<p>這個作法其實就是直接轉成machine language，好處是在簡短的句子比對效能很快，但是他的時間複雜度為O(N)，所以在長句子的比較會不見得比第一種或第二種快，可以參考這個demo:</p>
+
+<blockquote><p><a href="http://jsbin.com/uzuxi4/4/edit">http://jsbin.com/uzuxi4/4/edit</a></p></blockquote>
+
+<p>不過我覺得這個在解讀程式上時真的有點難懂，在寫時還是要考慮一下你的partner看不看的懂</p>
+
+<p>作者建議寫法二：</p>
+
+<pre><code>if (({foo:1, bar:1})[type]) {
+        }
+</code></pre>
+
+<p>其實這個就是最簡單的hash table search，他的時間複雜度平均為O(1)，在分析超長子句時在理論來說較上述來的好，以上相關的討論可以參考這個，非常的詳細：</p>
+
+<blockquote><p><a href="http://stackoverflow.com/questions/3945092/why-the-third-option-is-better-than-regex">http://stackoverflow.com/questions/3945092/why-the-third-option-is-better-than-regex</a></p></blockquote>
+
+<p>接下來在line36～97部分在講關於BST(Binary search tree)，作者範例很清楚就不多說，line103~114部分，則是建議使用array的形式取代掉多種if else的假設，我認為這個方式對於工程師解讀上是很有幫助的。</p>
+
+<p>另外除了array方式，我也推薦另外一種作法：</p>
+
+<pre><code>var hi = {
+    a:function () {
+        console.log("123")
+    },
+    b:function(){
+        console.log("456")
+    }
+}
+hi.a()
+</code></pre>
+
+<p>印出的結果為：</p>
+
+<pre><code>123
+</code></pre>
+
+<p>這樣的形式也可以幫助工程師能夠理解，而line120~138部分則是盡量使用logical operators可以幫助我們解讀code.</p>
+
+<p>我在參加js討論會，講者tonyQ提過這個有趣的example：</p>
+
+<pre><code>function test(option){
+    option = option || {};
+    console.log(option.start)
+}
+test(null);
+</code></pre>
+
+<p>這個印出來的結果是：</p>
+
+<pre><code>undefined
+</code></pre>
+
+<p>原因是null不屬於obj，裡面也沒有start參數，當然undefined，若改成：</p>
+
+<pre><code>function test(option){
+    //option = option || {};
+    option.test = option.test || {};
+    console.log(option.test.start)
+}
+test({test:{start:1}});
+</code></pre>
+
+<p>則印出的結果是1，這個方法可以幫助我們快速去理解obj內部的解析，值得學習！另外有個議題還蠻有趣的，請看：</p>
+
+<pre><code>console.log(true || false);
+console.log(true &amp;&amp; false);
+</code></pre>
+
+<p>以上的結果竟是&hellip;.</p>
+
+<pre><code>true
+false
+</code></pre>
+
+<p>不難理解，請自行想想 &hellip;</p>
+
+<h1>Issue3:Access to the Global Object </h1>
+
+
+<ul>
+<li>access the global object without hard-coding the identifier window</li>
+</ul>
+
+
+<blockquote><p><a href="https://github.com/shichuan/javascript-patterns/blob/master/general-patterns/access-to-global-object.html">https://github.com/shichuan/javascript-patterns/blob/master/general-patterns/access-to-global-object.html</a></p></blockquote>
+
+<p>這邊是指如何去高效率的調用global object，並且讓他們可以通過ES3, ES5 and ES5-strict.</p>
+
+<pre><code>var global = (function () {
+    return this || (1, eval)('this');
+}());
+</code></pre>
+
+<p>效能展示可以看這個：</p>
+
+<blockquote><p><a href="http://jsperf.com/globalx">http://jsperf.com/globalx</a></p></blockquote>
+
+<p>我們來看這個例子：</p>
+
+<pre><code>var x = 'outer';
+(function() {
+  var x = 'inner';
+  eval('console.log("direct call: " + x)'); 
+  (1,eval)('console.log("indirect call: " + x)'); 
+})();
+</code></pre>
+
+<p>輸出的結果為：</p>
+
+<pre><code>direct call: inner
+indirect call: outer
+</code></pre>
+
+<p>我曾經想過如果把(1,eval)的1改成null or 0 or undefined 結果通通都是這個，至於為何以下的討論串就有行這樣說：</p>
+
+<blockquote><p><a href="http://stackoverflow.com/questions/9107240/1-evalthis-vs-evalthis-in-javascript">http://stackoverflow.com/questions/9107240/1-evalthis-vs-evalthis-in-javascript</a></p></blockquote>
+
+<p>&ldquo;The expression (1, eval) is just a fancy way to force the eval to be indirect and return the global object.&rdquo;</p>
+
+<h1>Issue4:Single var Pattern </h1>
+
+
+<ul>
+<li>use one var statement and declare multiple variables</li>
+</ul>
+
+
+<blockquote><p><a href="https://github.com/shichuan/javascript-patterns/blob/master/general-patterns/single-var-pattern.html">https://github.com/shichuan/javascript-patterns/blob/master/general-patterns/single-var-pattern.html</a></p></blockquote>
+
+<p>一般而言，我們通常會這樣定義變數：</p>
+
+<pre><code>function func() {
+    var a = 1,
+    var b = 2,
+
+    // function body...
+}
+</code></pre>
+
+<p>這是沒有問題的，但是對於多寫一個var實在沒有額外好處，因此建議這樣寫：</p>
+
+<pre><code>function func() {
+    var a = 1,
+        b = 2,
+
+    // function body...
+}
+</code></pre>
+
+<p>這樣的好處可以幫助自己去強迫把宣告變數的地方放在同一個，可以幫助理解，也可以幫助自己減少忘記宣告變數的動作，
+那如果今天宣告的變數裡面有長字串（或者是包html的話），因為包這些字串每次讀取會增加很多空間，因此也建議類似這種東西要先去做宣告變數，如下：</p>
+
+<pre><code>function updateElement() {
+    var el = document.getElementById("result"),
+    style = el.style;
+    // do something with el and style...
+}
+</code></pre>
+
+<h1>Issue 5:Hoisting</h1>
+
+
+<p>
+&ndash; var statements anywhere in a function act as if the variables were declared at the top of the function</p>
+
+<blockquote><p><a href="https://github.com/shichuan/javascript-patterns/blob/master/general-patterns/hoisting.html">https://github.com/shichuan/javascript-patterns/blob/master/general-patterns/hoisting.html</a></p></blockquote>
+
+<h1>Issue 6:for loops</h1>
+
+
+<p>
+&ndash; optimized for loops</p>
+
+<blockquote><p><a href="https://github.com/shichuan/javascript-patterns/blob/master/general-patterns/hoisting.html">https://github.com/shichuan/javascript-patterns/blob/master/general-patterns/hoisting.html</a></p></blockquote>
+
+<p>這是一個很基本的javascript 變數宣告的觀念，首先，看如下代碼：</p>
+
+<pre><code>myname = "global"; // global variable
+function func() {
+    console.log(myname); // "undefined"
+    var myname = "local";
+    console.log(myname); // "local"
+}
+func();
+</code></pre>
+
+<p>第三行會出現undefined，這是因為在function外宣告的global variable並不會被導進function內變成local variable，因此第三行的console.log因為在他之前沒有宣告local variable，已故呈現undefined</p>
+
+<pre><code>myname = "global"; // global variable
+function func() {
+    var myname; // same as -&gt; var myname = undefined;
+    console.log(myname); // "undefined"
+    myname = "local";
+    console.log(myname); // "local"
+}
+func();
+</code></pre>
+
+<p> 這個情況是，他先宣告了某個local variable，但是因為他並沒有定義這個變數，以至於第四行的console.log輸出為undefined.</p>
+
+<h1>Issue 7:for-in loops </h1>
+
+
+<ul>
+<li>optimized for-in loops</li>
+</ul>
+
+
+<h1>Issue 8:(Not) Augmenting Built-in Prototypes </h1>
+
+
+<ul>
+<li>only augment built-in prototypes when certain conditions are met</li>
+</ul>
+
+
+<h1>Issue 9:switch Pattern</h1>
+
+
+<p>
+&ndash; improve the readability and robustness of your switch statements</p>
+
+<blockquote><p><a href="https://github.com/shichuan/javascript-patterns/blob/master/general-patterns/switch-pattern.html">https://github.com/shichuan/javascript-patterns/blob/master/general-patterns/switch-pattern.html</a></p></blockquote>
+
+<p>盡量多使用switch 方式，也請謹守下面switch的格式，break;和default:千萬別忘記打</p>
+
+<pre><code>var inspect_me = 0,
+        result = '';
+switch (inspect_me) {
+    case 0:
+        result = "zero";
+        break;
+    case 1:
+        result = "one";
+        break;
+    default:
+        result = "unknown";
+}
+</code></pre>
+
+<h1>Issue 10:Implied Typecasting</h1>
+
+
+<p>
+&ndash; avoid implied typecasting</p>
+
+<blockquote><p><a href="https://github.com/shichuan/javascript-patterns/blob/master/general-patterns/avoiding-implied-typecasting.html">https://github.com/shichuan/javascript-patterns/blob/master/general-patterns/avoiding-implied-typecasting.html</a></p></blockquote>
+
+<p>其實這邊在討論javascript中，要注意隱式類型的轉換，比如說0在==比較中代表的是false，而1代表的是true，他的範例如下：</p>
+
+<pre><code>var zero = 0;
+if (zero == false) {
+    console.log('123');
+}
+</code></pre>
+
+<p>輸出的結果為：123，另外我試個有趣的實驗，代碼：</p>
+
+<pre><code>var zero =[] ;
+if (zero == false){
+    console.log('23');
+}
+//Output:23
+</code></pre>
+
+<p>以上當我設定var zero ={} 或者 &lsquo;&rsquo; 或者 []時全部都是一樣的結果，那麼若我試試:</p>
+
+<pre><code>var zero =['123'] ;
+if (zero == false){
+    console.log('23');
+}
+//竟然沒有console.log的值！在試試true
+if (zero == true){
+    console.log('23');
+}
+//一樣沒有console.log的值！
+</code></pre>
+
+<p>同樣試過string.object也是一樣，這個小實驗蠻有趣的!</p>
+
+<h1>Issue 11:Avoiding eval() </h1>
+
+
+<ul>
+<li>avoid using eval()</li>
+</ul>
+
+
+<blockquote><p><a href="https://github.com/shichuan/javascript-patterns/blob/master/general-patterns/avoiding-eval.html">https://github.com/shichuan/javascript-patterns/blob/master/general-patterns/avoiding-eval.html</a></p></blockquote>
+
+<p>避免使用eval();</p>
+
+<h1>Issue 12:Number Conversions with parseInt() </h1>
+
+
+<ul>
+<li>use the second radix parameter</li>
+</ul>
+
+
+<h1>Issue 13:Minimizing Globals </h1>
+
+
+<ul>
+<li>create and access a global variable in a browser environment</li>
+</ul>
+
+
+<blockquote><p><a href="https://github.com/shichuan/javascript-patterns/blob/master/general-patterns/minimizing-globals.html">https://github.com/shichuan/javascript-patterns/blob/master/general-patterns/minimizing-globals.html</a></p></blockquote>
+
+<p>盡量減少宣告global variable，否則很容易經過多種方法就讓他被讀出來</p>
+
+<pre><code>myglobal = "hello"; // antipattern
+console.log(myglobal); // "hello"
+console.log(window.myglobal); // "hello"
+console.log(window["myglobal"]); // "hello"
+console.log(this.myglobal); // "hello"
+</code></pre>
+
+<h1>Issue 14:The Problem with Globals</h1>
+
+
+<p>
+&ndash; various problems with globals</p>
+
+<blockquote><p><a href="https://github.com/shichuan/javascript-patterns/blob/master/general-patterns/globals.html">https://github.com/shichuan/javascript-patterns/blob/master/general-patterns/globals.html</a></p></blockquote>
+
+<p>這是補充issue13</p>
+
+<pre><code>function sum(x, y) {
+    // implied global
+    result = x + y;
+    return result;
+}
+sum(1,2);
+console.log(result);
+</code></pre>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Nodejs-socket.io]]></title>
+    <link href="http://iamblue.github.com/blog/2012/11/10/nodejs-socket-dot-io/"/>
+    <updated>2012-11-10T21:17:00+08:00</updated>
+    <id>http://iamblue.github.com/blog/2012/11/10/nodejs-socket-dot-io</id>
+    <content type="html"><![CDATA[<p>(待寫完)</p>
+
+<p>&lsquo;Real Time&rsquo;, this conception is widely used on the web.If it combine with Nodejs, they will load more users and get higher performance.</p>
+
+<p>So I introduce this module &ldquo;socket.io&rdquo; on Node.js.</p>
+
+<p>First situation,  you sent a message, people receive .</p>
+
+<p>Second situation, you sent a message,people receive except yourself.</p>
+
+<p>Compare these two situations,there are lots of discuss on the forum.
+However,I think that second situation is more logical than first.Because I think</p>
+
+<p>Let&rsquo;s talk about its frame.</p>
+
+<p>socket.io divid into two parts, the Client and the Server. In the Server,there are three main js(manager.js,socket.io.js,socket.js,namespace.js) to build server service.Now, I will analyze the relationship between them.</p>
+
+<p>&ldquo;socket.io.js&rdquo; is the closet to the Client.In line 40~79,all of the Client requests will through this entering Server.From the point of view of the Server,it listens Client requests and go to execute this code.</p>
+
+<pre><code>exports.listen = function (server, options, fn) {
+    ...
+    return new exports.Manager(server, options);
+};
+</code></pre>
+
+<p>One thing to be noted the end of this code,it means call &ldquo;manager.js&rdquo;(we can see line 87 &ldquo;exports.Manager = require(&lsquo;./manager&rsquo;);&#8221;to understand)</p>
+
+<p>Before &ldquo;manager.js&rdquo;,we see follow code :</p>
+
+<pre><code>io.sockets.on('connection', function (socket){
+               ^^^^^^^^^^
+...
+})
+</code></pre>
+
+<p>Above code is exuted in Client,&ldquo;io&rdquo; means call a manager object,after &ldquo;io&rdquo; texts mean call a manager event ,and we see follow code on manager.js:</p>
+
+<pre><code>(call a manger object)
+function Manager (server, options) {
+  this.server = server;
+  this.namespaces = {};
+  this.sockets = this.of('');
+  this.settings = {
+    ...
+  };
+
+(call a manager event)
+this.sockets.on('connection', function (conn) {
+    self.emit('connection', conn);
+});
+</code></pre>
+
+<p>From above code,we can understand all of connections will be managed by a null string(named namespaces)</p>
+
+<p>ddd</p>
+
+<p>s</p>
+
+<p>manager.js
+socket.io.js
+socket.js</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[[Project]About issue workflow]]></title>
+    <link href="http://iamblue.github.com/blog/2012/11/02/about-issue-workflow/"/>
+    <updated>2012-11-02T10:16:00+08:00</updated>
+    <id>http://iamblue.github.com/blog/2012/11/02/about-issue-workflow</id>
+    <content type="html"><![CDATA[<p>本篇想來探討關於issue的workflow，記錄解決issue的流程必須非常清楚，這有許多好處：</p>
+
+<pre><code>1.方便後人閱讀,維護
+2.對於程式設計師來說，這是一個很好的記錄
+3.讓團隊工作系統更有條理
+</code></pre>
+
+<p>這是我目前&#8221;記錄issue&#8221;主要的五個項目：</p>
+
+<pre><code>1.Observation:（觀察） 觀察問題，描述問題
+2.Analysis &amp; Design: （分析）  想想可能得解決辦法，或者是可能的狀況
+3.Scope:（記錄）  施工，並且在這個項目記下有更改過的檔案路徑
+4.Done:（完成） 完成，並寫下完成的路徑以及最主要更改過的檔案
+5.Bottleneck:（瓶頸）這部份記錄關於此次issue所遇到的瓶頸和解決心得。
+</code></pre>
+
+<p>以下是範例
+Issue name:</p>
+
+<pre><code>Set up footer div and eanable footer page.
+footer page's content on google drive "WhatsWorthy User Agreement &amp; Privacy Policy".
+</code></pre>
+
+<p>&mdash;</p>
+
+<p>Author:Blue Chen
+Created:    11/31
+Start:  11/15 08:47
+End:        11/15 16:30
+Duration:   1d</p>
+
+<p>&mdash;</p>
+
+<p>Observation:</p>
+
+<pre><code>Most of Our pages have the functionality of receiving data from external sites, it have resulted in some of the dynamic height .
+According to web architecture,css and html will be read before javascript,we can't receive correct page's height to make footer div.So, we should build a way to solve this problem.
+</code></pre>
+
+<p>Analysis &amp; Design:</p>
+
+<pre><code>1.Design footer layout
+2.set regular footer style of css
+3.Relate to dynamic height,we should set special javascript on every page.
+</code></pre>
+
+<p>Scope:(記錄更改過的檔案)</p>
+
+<pre><code>1./theme/2/css/main_layout.css
+2./theme/2/layout/default.ctp
+</code></pre>
+
+<p>Done:</p>
+
+<pre><code>1./theme/2/css/main_layout.css
+2./theme/2/layout/default.ctp
+</code></pre>
+
+<p>Bottleneck:</p>
+
+<pre><code>1. Setting regular footer style of css
+</code></pre>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Browser Compatibility on Html5]]></title>
+    <link href="http://iamblue.github.com/blog/2012/11/01/browser-compatibility/"/>
+    <updated>2012-11-01T20:55:00+08:00</updated>
+    <id>http://iamblue.github.com/blog/2012/11/01/browser-compatibility</id>
+    <content type="html"><![CDATA[<p>The major difference between Html5 and xHTML is Html5 add more tag element,such as  &lsquo;&lt;header&gt;&rsquo; , &lsquo;&lt;nav&gt;&rsquo;&hellip;.and so on.</p>
+
+<p>We use these tag elements ,we also notice these tag element whether use in old browser at the same time.
+There I have one way to solve this problem.</p>
+
+<p>First, we can use javascript to create element. Second,use css make this element become a &ldquo;block&rdquo; element(In other words,they can display on the web page)</p>
+
+<p>As follows：</p>
+
+<p>[javascript]</p>
+
+<pre><code>&lt;!--[if IE]--&gt;  
+&lt;script type="text/javascript"&gt;
+document.createElement("header");
+document.createElement("footer");
+document.createElement("section");
+document.createElement("aside");
+document.createElement("nav");
+document.createElement("article");
+document.createElement("hgroup");
+document.createElement("time");
+&lt;/script&gt;
+&lt;!--[endif]--&gt;
+</code></pre>
+
+<p>[css]</p>
+
+<pre><code>section,header,footer,section,aside,nav,article,hgroup,time{
+display:block
+}
+</code></pre>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[about AJAX]]></title>
+    <link href="http://iamblue.github.com/blog/2012/10/26/about-ajax/"/>
+    <updated>2012-10-26T21:19:00+08:00</updated>
+    <id>http://iamblue.github.com/blog/2012/10/26/about-ajax</id>
+    <content type="html"><![CDATA[<p>For javascript language ,anything must become JSON from Object!We can see following code:</p>
+
+<p>Demo:</p>
+
+<p>Before select one friend:</p>
+
+<p><img src="http://iamblue.github.com/images/post_img/about_AJAX/1.png" /></p>
+
+<p>After select one friend,and &hellip;AJAX ! (catch his occasions)</p>
+
+<p><img src="http://iamblue.github.com/images/post_img/about_AJAX/2.png" /></p>
+
+<p>Before show my code , I assume some variable.</p>
+
+<pre><code>1.SITE_URL: is our website's URL
+</code></pre>
+
+<br/>
+
+
+<p>[Html]:</p>
+
+<pre><code>&lt;select class="select_fr_box" tabindex="1" onchange="getOccasion(this,'100000882157254,100002707491356&amp;','GroupGiftProjectFacebookFriends');" id="GroupGiftProjectFacebookFriends"&gt;
+    &lt;option value=""&gt;Select friends&lt;/option&gt;
+    &lt;option value=""&gt;blabla...&lt;/option&gt;
+&lt;/select&gt;
+</code></pre>
+
+<p>[Javascript &amp; jQuery]:</p>
+
+<pre><code>function getOccasion(ctrl,fb_user_friends,id){
+    $.ajax({
+        type: 'POST'
+        ,url: SITE_URL+'/groupgiftprojects/getOccasion'
+        ,data: {fb_id:ctrl.value}
+        ,success:
+            function(data) {
+                var myObject = eval('(' + data + ')');
+                console.log(myObject);
+                var string ='&lt;option value=""&gt;Select One&lt;/option&gt;';
+
+                (jQuery).each(myObject, function(i,value){
+                    string+="&lt;option value='"+(value.id).toString()+"'&gt;"+(value.name).toString()+"&lt;/option&gt;";
+                });
+                string+='&lt;option value="Other"&gt;Other&lt;/option&gt;';
+                $('#GroupGiftProjectOccasionId').html(string);
+                document.getElementById('id_other_text').style.display = 'none';
+                document.getElementById('app_user').style.display = 'block';
+                }
+            })
+}   
+</code></pre>
+
+<p>值得注意的一點，關於line5 的data部分是要輸入和種格式？為此我去查找jQuery Lib，這是輸入JSON格式.
+講到JSON其實有很多可以去討論的，先來講幾個基本的東西</p>
+
+<p>首先，在javscript中轉變成JSON之前，他必須是個物件</p>
+
+<pre><code>var a ={};
+a.username="blue";
+console.log(a.username) //blue
+JSON.stringify(a);// 這時候就是個JSON格式'{"username":"blue"}'
+</code></pre>
+
+<p>但要怎麼從JSON轉回javscript可用的物件呢？</p>
+
+<pre><code>var a ='{"username":"blue"}';// 假設有個JSON
+var b = JSON.parse(a); //把JSON轉成物件
+這時候就可以像obj一樣導用JSON的函式
+console.log(b.username); //"blue"
+</code></pre>
+
+<p>繼續[javascript部分]：line6的success函式function(data)，這時候的data指的是回傳的JSON(從controller回傳的）再用你喜歡的方法去抓想要的JSON內部值.</p>
+
+<p>此外，補充一些在用facebook api的JSON心得，關於facebook graph的GET與POST中,jQuery 的AJAX只可有POST and GET,那麼DELETE要如何去傳送呢？
+其實不只有jQuery的AJAX無法直接傳送，連browser也需最近幾年的才有DELETE協定，不過這部份不列入我目前想探討的部份，用jQuery AJAX傳送DELETE可以先透過POST外加method方法，如下：
+（比方說做個&#8221;取消likes&#8221;的功能）</p>
+
+<pre><code>$.ajax({
+    type: 'POST',
+    url: 'https://graph.facebook.com/' + post_id + '/likes?method=delete',
+    data: {
+        "access_token": access_token,
+        "_method": "delete"
+    }
+});
+</code></pre>
+
+<p>[php]（controller)：</p>
+
+<pre><code>public function getOccasion(){
+    $fb_id =$_POST['fb_id'];
+    $today_date = gmdate('Y-m-d',mktime(gmdate("H")+$this-&gt;me['timezone']));
+    $occasion_list = $this-&gt;Occasion-&gt;query("SELECT  * FROM occasions as Occasion WHERE (Occasion.fb_id=".$fb_id." AND Occasion.recurs_annually =1) OR (Occasion.fb_id=".$fb_id." AND Occasion.recurs_annually=0 AND Occasion.starting_date &gt;='".$today_date."' )");
+    $occasion_arr =array();
+    foreach( $occasion_list as $list){
+        $temp =array();
+        $occasion_name = $list['Occasion']['name'];
+        $occasion_date = $list['Occasion']['starting_date'];
+        $temp['fb_id']=$list['Occasion']['fb_id'];
+        $temp['id']=$list['Occasion']['id'];
+        $temp['name']=$occasion_name." - ".gmdate('F d, Y',strtotime($occasion_date));
+        $occasion_arr[]=$temp;
+    }
+    echo json_encode($occasion_arr);
+    exit;
+} 
+</code></pre>
+
+<p>這段php，對於AJAX來說，最重要的是line2部分:$_POST[&lsquo;&rsquo;]</p>
+
+<p>這是負責抓取JSON給controller端的php函式，而最後第二行是從php轉成JSON代碼傳回給前端.</p>
+
+<p>最後，來談談關於嚴謹的程式架構，我記得之前在研討會上，就有如此的疑問：</p>
+
+<p>AJAX在controller端直接讀取json這個行為，究竟有沒有違反MVC架構?
+我找了許多資料，嚴格的MVC架構中的C唯一的出口就是view，而這個行為就是只有從Controller順向過去View端（在呈現data時的流程）這是不可逆的，，因此證明這個答案是違反的！</p>
+
+<p>但是這部份因為一樣都可以跑出結果，因此沒有受到廣泛注意，也有一些人都把此行為定義可彈性化的MVC架構，對於我來說這是有點雞肋，如果每個規範都彈性化，那規範真的就不較規範了!而這部份該如何去改善，其實現今各大主流的MVC框架都有相關作法，有空多讀讀核心原始碼即可知道!</p>
+
+<p>舉例來說，以cakephp為例：</p>
+
+<p>我們會在controller端把值傳到某個AJAX套用的ctp中，controller端會多以下function:</p>
+
+<pre><code>$this-&gt;set('cookieValue', $cookieValue);
+$this-&gt;layout = 'ajax';
+(就跟平常傳值到某ctp方法一樣)
+</code></pre>
+
+<p>而view端會在鄉對應的ctp中去echo出值，而AJAX就直接到這ctp裡面抓值，這就完成嚴謹的MVC架構的AJAX!</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[About media query on CSS]]></title>
+    <link href="http://iamblue.github.com/blog/2012/10/08/about-media-query-on-css/"/>
+    <updated>2012-10-08T23:25:00+08:00</updated>
+    <id>http://iamblue.github.com/blog/2012/10/08/about-media-query-on-css</id>
+    <content type="html"><![CDATA[<p>現今mobile系統越來越多，web應用在mobile系統上的技術也越來越多元，因此寫下此篇來專心探討這部份</p>
+
+<p>首先，想必各位都會有個問題，如果是用web寫程式，那麼手機瀏覽器要如何去感應手機方向呢?</p>
+
+<p>談到此議題之前，我想先來提viewport概念</p>
+
+<pre><code>&lt;meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"&gt;
+</code></pre>
+
+<p>viewport即是手機browser把web page放在一個虛擬window之中，而這個window就是viewport，你可以想像他是web page的最外圍frame。</p>
+
+<p>不過此code需注意，只需要注意width部分即可，我曾經試過在加上height=device-height，不過這樣會造成瀏覽器判定你要針對此width和此height去做等比變化，因此會造成你在Portrait(直立)轉向Landscape（橫向）操作時，畫面右邊會出現一大片黑背景，而不會針對各種操作方向螢幕做變化。</p>
+
+<p>面對Web在行動系統或者是五花八門的螢幕時，都會需要針對特定螢幕呈現
+，那麼如何去針對個螢幕調整css呢？</p>
+
+<p>在css中，最常見使用的方式就是利用＠Media query，用法有兩種：</p>
+
+<p>1.在Html中：</p>
+
+<pre><code>&lt;link rel="stylesheet" media="screen and (min-width: 400px) and (max-width: 700px)" href="yourcssfile.css" /&gt;
+</code></pre>
+
+<p>2.在CSS中嵌入：</p>
+
+<pre><code>@media screen and (min-width: 400px) and (max-width: 700px) {
+your code....
+}
+</code></pre>
+
+<p>以上嵌入code的意思是說在螢幕視窗寬度介在400px~700px之間時，就套用這些css</p>
+
+<p>這個方法好處，在於可以在瀏覽器的外框隨意調整視窗大小，他所對應的視窗大小的css也會有所呈現，
+這樣就可以隨意來模擬各種mobile系統螢幕長寬所看到的模擬畫面
+下面有幾個常見的mobile系統的視窗大小：</p>
+
+<pre><code>/* Smartphones (portrait and landscape) ----------- */
+@media only screen 
+and (min-device-width : 320px) 
+and (max-device-width : 480px) {
+/* Styles */
+}
+
+/* Smartphones (landscape) ----------- */
+@media only screen 
+and (min-width : 321px) {
+/* Styles */
+}
+
+/* Smartphones (portrait) ----------- */
+@media only screen 
+and (max-width : 320px) {
+/* Styles */
+}
+
+/* iPads (portrait and landscape) ----------- */
+@media only screen 
+and (min-device-width : 768px) 
+and (max-device-width : 1024px) {
+/* Styles */
+}
+
+/* iPads (landscape) ----------- */
+@media only screen 
+and (min-device-width : 768px) 
+and (max-device-width : 1024px) 
+and (orientation : landscape) {
+/* Styles */
+}
+
+/* iPads (portrait) ----------- */
+@media only screen 
+and (min-device-width : 768px) 
+and (max-device-width : 1024px) 
+and (orientation : portrait) {
+/* Styles */
+}
+
+/* Desktops and laptops ----------- */
+@media only screen 
+and (min-width : 1224px) {
+/* Styles */
+}
+
+/* Large screens ----------- */
+@media only screen 
+and (min-width : 1824px) {
+/* Styles */
+}
+</code></pre>
+
+<p>除了上述使用寬度來判別之外，在new pad推出時因為帶來更高的解析度，因此也有人使用解析度來判別：</p>
+
+<pre><code>@media only screen and (-webkit-min-device-pixel-ratio: 1.5),
+only screen and (-moz-min-device-pixel-ratio: 1.5),
+only screen and (-o-min-device-pixel-ratio: 3/2),
+only screen and (min-device-pixel-ratio: 1.5) 
+</code></pre>
+
+<p>當然，要如何排放這些特殊系統的css也是有一門學問，如果你想了解詳情，可以參考此篇文章：</p>
+
+<blockquote><p><a href="http://blog.hinablue.me/entry/css-media-query-tips">http://blog.hinablue.me/entry/css-media-query-tips</a></p></blockquote>
+
+<p>我也來分享一下我目前的經驗，我建議一開始（沒有media query包住的css）請以smartphone為優先設定</p>
+
+<br/>假設你的css是設定：
+
+
+<pre><code>在Desktop螢幕中設定是能看到一個大div(id:a)裡面包住四個小div
+在smartphone螢幕中設定是能看到一個大div(id:a)裡面包住四個小div
+</code></pre>
+
+<p>那麼你在沒有包media query部分的css如果是以Desktop為設定時，你在smartphone上因為下載速度較慢，他優先套用Desktop的設定，所以螢幕所看到的會先是&#8221;一個大div有四個div&#8221;轉變成smartphone真正要看到的樣子，這對於美觀來說並不好看。</p>
+
+<p>再來，如果是用此方法在mobile系統上會有個問題必須解決，那就是效能。mobile在使用行動網路時，有時候讀取速度會非常緩慢，這時候front-end developer必須要針對code進行一些清潔，最常見的方法就是減少mobile系統讀取display:none的div，對於這個議題，這篇blog文章有詳細分析各種方法在瀏覽器上讀取的情況。</p>
+
+<br/>
+
+
+<p>請參考：</p>
+
+<blockquote><p><a href="http://www.qianduan.net/media-query-and-http-requests.html">http://www.qianduan.net/media-query-and-http-requests.html</a></p></blockquote>
+
+<p>觀察他的測試，可以得到一些結論</p>
+
+<pre><code>1.如果在圖片的div(最好是用background-image方法呈現圖片)的父親div設置display:none
+2.利用media query針對各螢幕大小去區分圖片呈現
+</code></pre>
+
+<p>第2點我認為是觀念最簡單且最容易上手的方式，但有個缺點，在早期的瀏覽器（IE8是無法支援media query方式）不過這是可以利用條件注釋來解決</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[github on Mac]]></title>
+    <link href="http://iamblue.github.com/blog/2012/08/16/github-on-mac/"/>
+    <updated>2012-08-16T19:43:00+08:00</updated>
+    <id>http://iamblue.github.com/blog/2012/08/16/github-on-mac</id>
+    <content type="html"><![CDATA[<p>when we are coworking on github,there maybe have some conflict problems between partner occasionally.</p>
+
+<p>I assume some reason previously, and find some solutions.</p>
+
+<p>1.Between Master and Branches problem</p>
+
+<p>Because our project was small previously, we was coding on Master.
+However,If we have more developer on this Master or project become more complex (For example, there are two developer on this Master at the same time),we will face conflict status.</p>
+
+<p>Now, we must use git&rsquo;s &ldquo;branch&rdquo; feature.
+As the name suggests,it means coder do his project in his own branch.When his project will be done, he can push it from branch to Master.</p>
+
+<p>This way has advantages as follows:</p>
+
+<pre><code>1.We can use branch to build website's plugin.We can change plugin easily.
+
+2.The follow-up project tracking can use branch to distinguish all projects.
+</code></pre>
+
+<p>Hint! When we use it previously, we must understand it steps.</p>
+
+<p>In Master, it step is :</p>
+
+<pre><code>commit -&gt; pull -&gt;push
+</code></pre>
+
+<p>In Branch , it step will be more complex.As follows:</p>
+
+<p>Part I：</p>
+
+<pre><code>commit
+</code></pre>
+
+<p>Part II:（先從github的主幹上面下載別人做的東西，跟在dev做的pull即是一樣的道理）</p>
+
+<pre><code>1) switch to Local/dev: git checkout dev
+2) pull: git pull
+3)switch to Local/[topic] branch: git checkout [topic]
+4) merge Local/dev branch into currently checked out branch (topic): git merge dev
+</code></pre>
+
+<p>Part III:（把自己的branch與主幹merge並丟上github跟push道理是一樣的)</p>
+
+<pre><code>1)switch to Local/dev branch: git checkout dev
+2)pull: git pull
+3)merge topic branch into currently checked out branch (Local/dev): git merge [topic]
+4)push (if ready to share): git push
+5)switch back to Local/topic branch to continue development: git checkout [topic]
+</code></pre>
+
+<p>We can make a bash to combine PartII and PartIII.As follows:</p>
+
+<p>PART II:</p>
+
+<pre><code>function setWorkingBranch {
+  br=`git branch | grep "*"`
+  workingBranch=${br/* /}
+}
+setWorkingBranch
+echo 'Currently on '$workingBranch
+echo 'Checking out dev...'
+git checkout dev
+echo 'Pulling...'
+git pull
+echo 'Checking out '$workingBranch'...'
+git checkout $workingBranch
+echo 'Merging dev into '$workingBranch'...'
+git merge dev
+</code></pre>
+
+<p>Part III:</p>
+
+<pre><code>function setWorkingBranch {
+  br=`git branch | grep "*"`
+  workingBranch=${br/* /}
+}
+setWorkingBranch
+echo 'Currently on '$workingBranch
+echo 'Checking out dev...'
+git checkout dev
+echo 'Pulling...'
+git pull
+echo 'Merging '$workingBranch' into dev...'
+git merge $workingBranch
+echo 'Pushing to origin...'
+git push
+echo 'Checking out '$workingBranch'...'
+git checkout $workingBranch
+</code></pre>
+
+<p>github on Mac</p>
+]]></content>
+  </entry>
+  
+</feed>
