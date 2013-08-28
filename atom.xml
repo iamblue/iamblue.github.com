@@ -4,7 +4,7 @@
   <title><![CDATA[IamBlue]]></title>
   <link href="http://iamblue.github.io/atom.xml" rel="self"/>
   <link href="http://iamblue.github.io/"/>
-  <updated>2013-06-12T19:46:07+08:00</updated>
+  <updated>2013-08-28T16:36:19+08:00</updated>
   <id>http://iamblue.github.io/</id>
   <author>
     <name><![CDATA[Mr.Blue]]></name>
@@ -49,8 +49,13 @@
  的&#8217;%~&lsquo;改成&rsquo;%c&#8217;</p></li>
 <li><p>其他參照：
 <a href="https://gist.github.com/agnoster/3712874">https://gist.github.com/agnoster/3712874</a></p></li>
-<li>文字亂碼部分：
-<a href="https://gist.github.com/qrush/1595572">https://gist.github.com/qrush/1595572</a></li>
+<li><p>文字亂碼部分：
+<a href="https://gist.github.com/qrush/1595572">https://gist.github.com/qrush/1595572</a></p></li>
+<li><p>遇到的ubuntu上亂碼問題：
+<a href="https://github.com/robbyrussell/oh-my-zsh/issues/1906">https://github.com/robbyrussell/oh-my-zsh/issues/1906</a></p>
+
+<p>  cd ~/.oh-my-zsh/themes/
+  git checkout  d6a36b1 agnoster.zsh-theme</p></li>
 </ol>
 
 ]]></content>
