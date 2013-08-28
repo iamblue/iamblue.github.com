@@ -39,3 +39,9 @@ https://gist.github.com/agnoster/3712874
 6. 文字亂碼部分：
 https://gist.github.com/qrush/1595572
 
+7. 遇到的ubuntu上亂碼問題：
+https://github.com/robbyrussell/oh-my-zsh/issues/1906
+	
+	cd ~/.oh-my-zsh/themes/
+	git checkout  d6a36b1 agnoster.zsh-theme
+
